@@ -12,7 +12,7 @@ public class UICanvas : MonoBehaviour
 
     public void ActivateActivationText(string activationString)
     {
-        activationText.text = activationString + "?";
+        activationText.text = activationString;
 
         if (activationText.gameObject.activeSelf) return;
         activationText.gameObject.SetActive(true);
