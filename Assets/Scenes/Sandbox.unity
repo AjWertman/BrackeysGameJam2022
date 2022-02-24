@@ -7214,10 +7214,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5138266075172481765, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5138266076384287752, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -7266,33 +7262,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: Core
       objectReference: {fileID: 0}
-    - target: {fileID: 5138266076649672112, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183642, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: Loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183645, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: playlist.Array.data[1].phase
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183645, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: playlist.Array.data[2].phase
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183645, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: playlist.Array.data[0].volume
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183645, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: playlist.Array.data[1].volume
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6481666674584183645, guid: b602b39caf439e64aaa34acea00ce619, type: 3}
-      propertyPath: playlist.Array.data[0].songClip
-      value: 
-      objectReference: {fileID: 8300000, guid: fc2d2127a6fd91a42be5746c38b91ce5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b602b39caf439e64aaa34acea00ce619, type: 3}

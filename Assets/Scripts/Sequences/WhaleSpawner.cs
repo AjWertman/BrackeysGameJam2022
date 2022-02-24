@@ -1,27 +1,49 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
-//Rename manager or something, then create whale spawner which works like the arrow spawner in shield wall
 public class WhaleSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject whalePrefab = null;
-    [SerializeField] int numberOfWhalesInPool = 10;
+    [SerializeField] float minTimeBetweenSpawns = 4f;
+    [SerializeField] float maxTimeBetweenSpawns = 7f;
 
-    List<Whale> whalePool = new List<Whale>();
+    //Test out
+    float minYPos = 0;
+    float maxYPos = 1000;
 
-    private void Start()
+    bool canSpawn = true;
+
+    public IEnumerator SpawnWhale(Whale whale)
     {
-        CreateWhalePool();
+        if (!canSpawn) yield break;
+
+        canSpawn = false;
+
+        SetRandomYPosition();
+
+        whale.transform.position = transform.position;
+        whale.transform.rotation = transform.rotation;
+
+        whale.gameObject.SetActive(true);
+
+        whale.SetIsActive(true);
+
+        float timeBetweenSpawns = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
+
+        yield return new WaitForSeconds(timeBetweenSpawns);
+
+        canSpawn = true;
     }
 
-    private void CreateWhalePool()
+    private void SetRandomYPosition()
     {
-        for (int i = 0; i < numberOfWhalesInPool; i++)
-        {
-            GameObject newWhaleInstance = Instantiate(whalePrefab, transform);
-        }
+        Vector3 currentPos = transform.position;
+        float yPos = Random.Range(minYPos, maxYPos);
+
+        transform.position = new Vector3(currentPos.x, yPos, currentPos.z);
+    }
+
+    public bool CanSpawn()
+    {
+        return canSpawn;
     }
 }

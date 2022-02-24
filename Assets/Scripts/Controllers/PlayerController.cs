@@ -118,7 +118,8 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Whale hitWhale = other.GetComponent<Whale>();
-        if (hitWhale != null)
+        OutOfBounds oob = other.GetComponent<OutOfBounds>();
+        if (hitWhale != null || oob != null)
         {
             //Screen fx
             //Reset to checkpoint

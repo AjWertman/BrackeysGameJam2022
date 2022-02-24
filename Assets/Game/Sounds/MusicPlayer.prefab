@@ -46,12 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playlist:
   - phase: 0
+    songClip: {fileID: 8300000, guid: fc2d2127a6fd91a42be5746c38b91ce5, type: 3}
+    volume: 0.1
+  - phase: 1
     songClip: {fileID: 0}
     volume: 1
-  - phase: 0
-    songClip: {fileID: 0}
-    volume: 1
-  - phase: 0
+  - phase: 2
     songClip: {fileID: 0}
     volume: 1
 --- !u!82 &7004352090591039226
@@ -68,7 +68,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
