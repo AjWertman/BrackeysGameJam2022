@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Rename manager or something, then create whale spawner which works like the arrow spawner in shield wall
 public class WhaleManager : MonoBehaviour
 {
     [SerializeField] GameObject whalePrefab = null;
@@ -12,11 +11,61 @@ public class WhaleManager : MonoBehaviour
     [SerializeField] float whaleScaleMin = 1;
     [SerializeField] float whaleScaleMax = 5;
 
+    WhaleSpawner[] whaleSpawners = null;
     List<Whale> whalePool = new List<Whale>();
+
+    bool isActive = false;
+    bool canHandleSpawner = false;
 
     private void Start()
     {
         CreateWhalePool();
+    }
+
+    private void Update()
+    {
+        if (!isActive) return;
+        if (!canHandleSpawner) return;
+
+        StartCoroutine(HandleSpawners());
+    }
+
+    public void ActivateWhalePhase()
+    {
+        foreach(WhaleSpawner spawner in whaleSpawners)
+        {
+            StartCoroutine(spawner.ActivateSpawner());
+        }
+
+        isActive = true;
+        canHandleSpawner = true;
+    }
+
+    public void TurnOffWhalePhase()
+    {
+        foreach(WhaleSpawner spawner in whaleSpawners)
+        {
+            spawner.gameObject.SetActive(false);
+        }
+
+        isActive = false;
+    }
+
+    private IEnumerator HandleSpawners()
+    {
+        if (!canHandleSpawner) yield break;
+        canHandleSpawner = false;
+
+        foreach (WhaleSpawner spawner in whaleSpawners)
+        {
+            if (spawner.CanSpawn())
+            {
+                spawner.SpawnWhale(GetRandomWhale());
+            }
+        }
+        yield return new WaitForSeconds(1f);
+
+        canHandleSpawner = true;
     }
 
     private void CreateWhalePool()

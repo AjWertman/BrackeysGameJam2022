@@ -25,6 +25,6 @@ public class BirdTransformation : MonoBehaviour
 
         yield return new WaitForSeconds(timeToTransformation);
 
-        player.TransformPlayer(PlayerState.Bird);
+        player.SetNewPhase(PlayerPhase.Two);
     }
 }

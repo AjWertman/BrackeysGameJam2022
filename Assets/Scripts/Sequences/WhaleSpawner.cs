@@ -4,13 +4,22 @@ using UnityEngine;
 public class WhaleSpawner : MonoBehaviour
 {
     [SerializeField] float minTimeBetweenSpawns = 4f;
-    [SerializeField] float maxTimeBetweenSpawns = 7f;
+    [SerializeField] float maxTimeBetweenSpawns = 6f;
 
     //Test out
-    float minYPos = 0;
-    float maxYPos = 1000;
+    float minYPos = -30f;
+    float maxYPos = 10f;
 
-    bool canSpawn = true;
+    bool canSpawn = false;
+
+    public IEnumerator ActivateSpawner()
+    {
+        float timeToSpawn = Random.Range(0, 4);
+
+        yield return new WaitForSeconds(timeToSpawn);
+
+        canSpawn = true;
+    }
 
     public IEnumerator SpawnWhale(Whale whale)
     {

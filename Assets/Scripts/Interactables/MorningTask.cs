@@ -37,7 +37,6 @@ public class MorningTask : RaycastableObject
 
     public void HighlightTask(bool shouldActivate)
     {
-        if (!isActivated) return;
         float fresnelPower = 1000;
         int layer = 0;
 
@@ -53,5 +52,11 @@ public class MorningTask : RaycastableObject
         {
             child.gameObject.layer = layer;
         }
+    }
+
+    public void ActivateTask(bool shouldActivate)
+    {
+        isActivated = shouldActivate;
+        HighlightTask(shouldActivate);
     }
 }

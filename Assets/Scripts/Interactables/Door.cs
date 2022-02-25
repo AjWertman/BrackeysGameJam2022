@@ -10,6 +10,8 @@ public class Door : RaycastableObject
 
     Animator animator = null;
 
+    bool isOpen = false;
+
     //add to sound manager
     public event Action onOpen;
 
@@ -21,9 +23,17 @@ public class Door : RaycastableObject
 
     public override void OnClick()
     {
-        if (isLocked == true) return;
+        OpenDoor(!isOpen);
+    }
 
-        objectToOpen.gameObject.SetActive(false);
+    public void OpenDoor(bool shouldOpen)
+    {
+        if (isLocked == true) return;
+        
+        //Switch to animation insteadof activating
+        bool shouldSetActive = !shouldOpen;
+
+        objectToOpen.gameObject.SetActive(shouldSetActive);
 
         //bool isOpen = animator.GetBool("open");
         //animator.SetBool("open", !isOpen);

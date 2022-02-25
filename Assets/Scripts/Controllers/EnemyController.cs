@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -32,7 +29,6 @@ public class EnemyController : MonoBehaviour
 
     private void ChasePlayer()
     {
-
         float distanceToPlayer = Vector3.Distance(transform.position, playerController.transform.position);
 
         if(distanceToPlayer > caughtDistance)

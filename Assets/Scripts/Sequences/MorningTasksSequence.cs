@@ -54,11 +54,11 @@ public class MorningTasksSequence : MonoBehaviour
     {
         if (currentTask != null)
         {
-            currentTask.HighlightTask(false);
+            currentTask.ActivateTask(false);
         }
 
         currentTask = morningTask;
-        currentTask.HighlightTask(true);
+        currentTask.ActivateTask(true);
     }
 
     private void CompleteMorningTaskSequence()
