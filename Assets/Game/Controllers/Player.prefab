@@ -264,7 +264,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4347351626365411679}
   serializedVersion: 2
-  m_Mass: 15
+  m_Mass: 11
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -300,12 +300,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 4347351626364035961}
   movementSettings:
-    ForwardSpeed: 14
-    BackwardSpeed: 9
-    StrafeSpeed: 10
+    ForwardSpeed: 33
+    BackwardSpeed: 25
+    StrafeSpeed: 25
     RunMultiplier: 1
     RunKey: 304
-    JumpForce: 85
+    JumpForce: 65
     SlopeCurveModifier:
       serializedVersion: 2
       m_Curve:
@@ -351,10 +351,10 @@ MonoBehaviour:
     lockCursor: 1
   advancedSettings:
     groundCheckDistance: 0.1
-    stickToGroundHelperDistance: 2
+    stickToGroundHelperDistance: 10
     slowDownRate: 250
     airControl: 0
-    shellOffset: 0.1
+    shellOffset: 0
 --- !u!114 &7824248447834475369
 MonoBehaviour:
   m_ObjectHideFlags: 0

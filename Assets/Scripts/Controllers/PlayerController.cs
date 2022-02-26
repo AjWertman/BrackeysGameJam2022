@@ -249,7 +249,7 @@ public class PlayerController : MonoBehaviour
 
         if (phase != PlayerPhase.Two)
         {
-            ActivateFirstPersonController(true);
+            ActivateFirstPersonController(true);           
         }
         else
         {
