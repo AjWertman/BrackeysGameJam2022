@@ -245,6 +245,8 @@ public class PlayerController : MonoBehaviour
         transform.position = checkpointTransform.position;
         transform.rotation = checkpointTransform.rotation;
 
+        yield return new WaitForSeconds(1);
+
         if (phase != PlayerPhase.Two)
         {
             ActivateFirstPersonController(true);
@@ -263,7 +265,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(phase == PlayerPhase.Two)
+        if(phase == PlayerPhase.One)
+        {
+            Level1CheckpointTrigger level1CheckpointTrigger = other.GetComponent<Level1CheckpointTrigger>();
+
+            if(level1CheckpointTrigger != null)
+            {
+                checkpointManager.ActivateNextLevel1Checkpoint();
+                level1CheckpointTrigger.gameObject.SetActive(false);
+            }
+        }
+        else if(phase == PlayerPhase.Two)
         {
             LightSpeedSequence lightSpeedSequence = other.GetComponent<LightSpeedSequence>();
 

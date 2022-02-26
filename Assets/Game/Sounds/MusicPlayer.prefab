@@ -49,11 +49,11 @@ MonoBehaviour:
     songClip: {fileID: 8300000, guid: fc2d2127a6fd91a42be5746c38b91ce5, type: 3}
     volume: 0.1
   - phase: 1
-    songClip: {fileID: 0}
-    volume: 1
+    songClip: {fileID: 8300000, guid: 6df9dd6afbbd3fe408a510631c6484ce, type: 3}
+    volume: 0.1
   - phase: 2
-    songClip: {fileID: 0}
-    volume: 1
+    songClip: {fileID: 8300000, guid: 51fc729ed19585743accde7f5c28599c, type: 3}
+    volume: 0.3
 --- !u!82 &7004352090591039226
 AudioSource:
   m_ObjectHideFlags: 0

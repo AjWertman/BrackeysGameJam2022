@@ -6,7 +6,9 @@ using UnityEngine;
 public class CheckpointManager : MonoBehaviour
 {
     [Header("Phase One")]
-    [SerializeField] Transform playerStartTransform1 = null;
+    [SerializeField] Transform playerStartTransform1_1 = null;
+    [SerializeField] Transform playerStartTransform1_2 = null;
+    Transform currentLevel1Transform = null;
 
     [Header("Phase Two")]
     [SerializeField] Transform playerStartTransform2 = null;
@@ -15,6 +17,11 @@ public class CheckpointManager : MonoBehaviour
     [SerializeField] EnemyController enemy = null;
     [SerializeField] Door[] doorsToClose3 = null;
     [SerializeField] Transform playerStartTransform3 = null;
+
+    private void Start()
+    {
+        currentLevel1Transform = playerStartTransform1_1;
+    }
 
     public void ResetToLastCheckpoint(PlayerPhase phase)
     {
@@ -34,12 +41,12 @@ public class CheckpointManager : MonoBehaviour
 
     private void ResetToPhase1()
     {
-        
+        //Nothing
     }
 
     private void ResetToPhase2()
     {
-        
+        //Nothing
     }
 
     private void ResetToPhase3()
@@ -54,7 +61,7 @@ public class CheckpointManager : MonoBehaviour
 
         if (playerPhase == PlayerPhase.One)
         {
-            restartTransform = playerStartTransform1;
+            restartTransform = currentLevel1Transform;
         }
         else if(playerPhase == PlayerPhase.Two)
         {
@@ -74,5 +81,10 @@ public class CheckpointManager : MonoBehaviour
         {
             door.OpenDoor(false);
         }
+    }
+
+    public void ActivateNextLevel1Checkpoint()
+    {
+        currentLevel1Transform = playerStartTransform1_2;
     }
 }
