@@ -14,14 +14,10 @@ public class MusicPlayer : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    private void Start()
+    public void SetSong(PlayerPhase phase)
     {
-        //Swap to timeline or coroutine
-        SetSong(MusicPhase.Phase0);
-    }
+        audioSource.Stop();
 
-    public void SetSong(MusicPhase phase)
-    {
         Song songToSet = GetSong(phase);
 
         audioSource.clip = songToSet.GetSongClip();
@@ -32,7 +28,7 @@ public class MusicPlayer : MonoBehaviour
         audioSource.Play();
     }
 
-    private Song GetSong(MusicPhase phase)
+    private Song GetSong(PlayerPhase phase)
     {
         Song songToGet = null;
 
@@ -48,16 +44,14 @@ public class MusicPlayer : MonoBehaviour
     }
 }
 
-public enum MusicPhase { Phase0, Phase1, Phase2, Phase3}
-
 [Serializable]
 public class Song
 {
-    [SerializeField] MusicPhase phase = MusicPhase.Phase0;
+    [SerializeField] PlayerPhase phase = PlayerPhase.One;
     [SerializeField] AudioClip songClip = null;
     [Range(0, 1)] [SerializeField] float volume = 1;
 
-    public MusicPhase GetPhase()
+    public PlayerPhase GetPhase()
     {
         return phase;
     }

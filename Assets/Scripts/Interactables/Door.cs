@@ -8,10 +8,11 @@ public class Door : RaycastableObject
     [SerializeField] bool isTrap = false;
     [SerializeField] bool isLocked = true;
 
+    [SerializeField] bool isEndDoor = false;
+
     Animator animator = null;
 
     bool isOpen = false;
-
     //add to sound manager
     public event Action onOpen;
 
@@ -19,6 +20,18 @@ public class Door : RaycastableObject
     {
         base.Awake();
         animator = objectToOpen.GetComponent<Animator>();
+    }
+
+    public void Update()
+    {
+        if (isLocked && activationText != "Door is locked")
+        {
+            activationText = "Door is locked";
+        }
+        else if(!isLocked && activationText != "Open the door")
+        {
+            activationText = "Open the door";
+        }
     }
 
     public override void OnClick()
@@ -33,15 +46,19 @@ public class Door : RaycastableObject
         //Switch to animation insteadof activating
         bool shouldSetActive = !shouldOpen;
 
-        objectToOpen.gameObject.SetActive(shouldSetActive);
+        if (!isEndDoor)
+        {
+            objectToOpen.gameObject.SetActive(shouldSetActive);
+        }
 
         //bool isOpen = animator.GetBool("open");
         //animator.SetBool("open", !isOpen);
 
-
-        //Add sound fx so you dont need the isTrap variable
-        if (!isTrap) return;
-        onOpen();
+        //Add sound fx so you dont need the isTrap or isEndDoor variable
+        if (isTrap || isEndDoor)
+        {
+            onOpen();
+        }
     }
 
     public void LockDoor(bool shouldLock)

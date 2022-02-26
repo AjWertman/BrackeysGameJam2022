@@ -11,21 +11,13 @@ public class MorningTasksSequence : MonoBehaviour
 
     int maxTasks = 0;
 
-    private void Awake()
+    private void Start()
     {
-        foreach(MorningTask morningTask in morningTasks)
+        maxTasks = morningTasks.Count;
+        foreach (MorningTask morningTask in morningTasks)
         {
             morningTask.onTaskComplete += AdvanceTask;
-        }
-
-        maxTasks = morningTasks.Count;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            BeginMorningTasksSequence();
+            morningTask.ActivateTask(false);
         }
     }
 
@@ -64,6 +56,6 @@ public class MorningTasksSequence : MonoBehaviour
     private void CompleteMorningTaskSequence()
     {
         doorToUnlock.LockDoor(false);
-        currentTask.HighlightTask(false);
+        currentTask.ActivateTask(false);
     }
 }

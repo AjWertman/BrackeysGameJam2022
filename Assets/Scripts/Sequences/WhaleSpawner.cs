@@ -7,14 +7,14 @@ public class WhaleSpawner : MonoBehaviour
     [SerializeField] float maxTimeBetweenSpawns = 6f;
 
     //Test out
-    float minYPos = -30f;
-    float maxYPos = 10f;
+    float minYPos = -125f;
+    float maxYPos = -60f;
 
     bool canSpawn = false;
 
     public IEnumerator ActivateSpawner()
     {
-        float timeToSpawn = Random.Range(0, 4);
+        float timeToSpawn = Random.Range(0, 3);
 
         yield return new WaitForSeconds(timeToSpawn);
 
@@ -23,24 +23,24 @@ public class WhaleSpawner : MonoBehaviour
 
     public IEnumerator SpawnWhale(Whale whale)
     {
-        if (!canSpawn) yield break;
+        if (canSpawn)
+        {
+            canSpawn = false;
+            SetRandomYPosition();
 
-        canSpawn = false;
+            whale.transform.position = transform.position;
+            whale.transform.rotation = transform.rotation;
 
-        SetRandomYPosition();
+            whale.gameObject.SetActive(true);
 
-        whale.transform.position = transform.position;
-        whale.transform.rotation = transform.rotation;
+            whale.SetIsActive(true);
 
-        whale.gameObject.SetActive(true);
+            float timeBetweenSpawns = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
 
-        whale.SetIsActive(true);
+            yield return new WaitForSeconds(timeBetweenSpawns);
 
-        float timeBetweenSpawns = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
-
-        yield return new WaitForSeconds(timeBetweenSpawns);
-
-        canSpawn = true;
+            canSpawn = true;
+        }
     }
 
     private void SetRandomYPosition()

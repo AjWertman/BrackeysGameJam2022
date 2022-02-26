@@ -17,6 +17,11 @@ public class WhaleManager : MonoBehaviour
     bool isActive = false;
     bool canHandleSpawner = false;
 
+    private void Awake()
+    {
+        whaleSpawners = FindObjectsOfType<WhaleSpawner>();
+    }
+
     private void Start()
     {
         CreateWhalePool();
@@ -32,7 +37,7 @@ public class WhaleManager : MonoBehaviour
 
     public void ActivateWhalePhase()
     {
-        foreach(WhaleSpawner spawner in whaleSpawners)
+        foreach (WhaleSpawner spawner in whaleSpawners)
         {
             StartCoroutine(spawner.ActivateSpawner());
         }
@@ -43,7 +48,7 @@ public class WhaleManager : MonoBehaviour
 
     public void TurnOffWhalePhase()
     {
-        foreach(WhaleSpawner spawner in whaleSpawners)
+        foreach (WhaleSpawner spawner in whaleSpawners)
         {
             spawner.gameObject.SetActive(false);
         }
@@ -53,19 +58,21 @@ public class WhaleManager : MonoBehaviour
 
     private IEnumerator HandleSpawners()
     {
-        if (!canHandleSpawner) yield break;
-        canHandleSpawner = false;
-
-        foreach (WhaleSpawner spawner in whaleSpawners)
+        if (canHandleSpawner)
         {
-            if (spawner.CanSpawn())
-            {
-                spawner.SpawnWhale(GetRandomWhale());
-            }
-        }
-        yield return new WaitForSeconds(1f);
+            canHandleSpawner = false;
 
-        canHandleSpawner = true;
+            foreach (WhaleSpawner spawner in whaleSpawners)
+            {
+                if (spawner.CanSpawn())
+                {
+                    StartCoroutine(spawner.SpawnWhale(GetRandomWhale()));
+                }
+            }
+            yield return new WaitForSeconds(1f);
+
+            canHandleSpawner = true;
+        }
     }
 
     private void CreateWhalePool()
@@ -77,6 +84,7 @@ public class WhaleManager : MonoBehaviour
 
             if (whalePool.Contains(whale)) return;
             whalePool.Add(whale);
+            whale.gameObject.SetActive(false);
         }
     }
 
@@ -89,7 +97,7 @@ public class WhaleManager : MonoBehaviour
 
         whaleTransform.localScale = new Vector3(randomScale, randomScale, randomScale);
 
-        return randomWhale;      
+        return randomWhale;
     }
 
     private Whale GetInactiveWhale()

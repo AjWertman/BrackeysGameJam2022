@@ -11,6 +11,9 @@ public class EnemyController : MonoBehaviour
 
     bool isActivated = false;
 
+    Vector3 startPosition = Vector3.zero;
+    Quaternion startRotation = Quaternion.identity;
+
     private void Awake()
     {
         playerController = FindObjectOfType<PlayerController>();
@@ -18,6 +21,12 @@ public class EnemyController : MonoBehaviour
 
         navMeshAgent = GetComponent<NavMeshAgent>();
         caughtDistance = navMeshAgent.stoppingDistance;
+    }
+
+    private void Start()
+    {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
     private void Update()
@@ -31,15 +40,24 @@ public class EnemyController : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, playerController.transform.position);
 
-        if(distanceToPlayer > caughtDistance)
+        if(distanceToPlayer <= caughtDistance)
         {
-            navMeshAgent.SetDestination(playerController.transform.position);
+            StartCoroutine(playerController.Die());      
         }
         else
         {
-            //ScreenFX 
-            //Reset
+            navMeshAgent.SetDestination(playerController.transform.position);
         }
+    }
+
+    public void ResetEnemy()
+    {
+        print("reseting enemy"); 
+        isActivated = false;
+        navMeshAgent.enabled = false;
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+        navMeshAgent.enabled = true;
     }
 
     public void SetIsActivated(bool _isActivated)

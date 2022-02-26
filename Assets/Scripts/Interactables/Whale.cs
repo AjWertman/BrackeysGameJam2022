@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Whale : MonoBehaviour
 {
-    [SerializeField] float whaleSpeed = 5;
+    float whaleSpeed = 15;
 
     bool isActive = false;
 
@@ -38,11 +38,11 @@ public class Whale : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //OutOfBounds oob = other.GetComponent<OutOfBounds>();   
+        OutOfBounds oob = other.GetComponent<OutOfBounds>();
 
-        //if(oob != null)
-        //{
-        //    DeactivateWhale();
-        //}
+        if (oob != null)
+        {
+            DeactivateWhale();
+        }
     }
 }

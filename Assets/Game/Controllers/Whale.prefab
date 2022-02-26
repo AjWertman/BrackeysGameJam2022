@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 560421950694599818}
   - component: {fileID: 1511126506072681261}
+  - component: {fileID: 5871592710637225650}
   m_Layer: 0
   m_Name: Whale
   m_TagString: Untagged
@@ -44,7 +45,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce08059541c43d84da680f0f930c10fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whaleSpeed: 5
+--- !u!54 &5871592710637225650
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539731266217478749}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6805002682249145929
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +151,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6805002682249145929}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2

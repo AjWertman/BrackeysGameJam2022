@@ -6,6 +6,9 @@ using UnityEngine;
 public class BirdTransformation : MonoBehaviour
 {
     [SerializeField] float timeToTransformation = 5f;
+    [SerializeField] GameObject oobToTurnOff = null;
+
+    WhaleManager whaleManager = null;
     Door doorParent = null;
     PlayerController player = null;
 
@@ -15,6 +18,7 @@ public class BirdTransformation : MonoBehaviour
     {
         doorParent = GetComponent<Door>();
         player = FindObjectOfType<PlayerController>();
+        whaleManager = FindObjectOfType<WhaleManager>();
         doorParent.onOpen += () => StartCoroutine(BeginBirdTransformation());
     }
 
@@ -22,9 +26,12 @@ public class BirdTransformation : MonoBehaviour
     {
         if (hasBegunTransformation) yield break;
         hasBegunTransformation = true;
+        oobToTurnOff.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(timeToTransformation);
 
-        player.SetNewPhase(PlayerPhase.Two);
+        StartCoroutine(player.SetNewPhase(PlayerPhase.Two));
+
+        whaleManager.ActivateWhalePhase();
     }
 }

@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class MorningTask : RaycastableObject
 {
-    [SerializeField] Texture2D objectTexture = null;
+    //[SerializeField] Texture2D objectTexture = null;
     [SerializeField] Material baseGlowMaterial = null;
+    [SerializeField] string activeActivationText = null;
 
     MeshRenderer[] meshRenderers = null;
     Material material = null;
@@ -13,7 +14,7 @@ public class MorningTask : RaycastableObject
 
     string fresnelPowerVariable = "_FresnelPower";
 
-    bool isActivated = false;
+    [SerializeField] bool isActivated = false;
 
     protected override void Awake()
     {
@@ -46,7 +47,7 @@ public class MorningTask : RaycastableObject
             layer = 6;
         }
 
-        material.SetFloat("_FresnelPower", fresnelPower);
+        material.SetFloat(fresnelPowerVariable, fresnelPower);
         gameObject.layer = layer;
         foreach(Transform child in transform)
         {
@@ -57,6 +58,16 @@ public class MorningTask : RaycastableObject
     public void ActivateTask(bool shouldActivate)
     {
         isActivated = shouldActivate;
+
+        if (shouldActivate)
+        {
+            activationText = activeActivationText;
+        }
+        else
+        {
+            activationText = "";
+        }
+
         HighlightTask(shouldActivate);
     }
 }

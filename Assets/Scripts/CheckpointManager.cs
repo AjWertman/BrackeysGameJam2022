@@ -7,7 +7,6 @@ public class CheckpointManager : MonoBehaviour
 {
     [Header("Phase One")]
     [SerializeField] Transform playerStartTransform1 = null;
-    [SerializeField] Door[] doorsToClose1 = null;
 
     [Header("Phase Two")]
     [SerializeField] Transform playerStartTransform2 = null;
@@ -35,17 +34,17 @@ public class CheckpointManager : MonoBehaviour
 
     private void ResetToPhase1()
     {
-        CloseDoors(doorsToClose1);
+        
     }
 
     private void ResetToPhase2()
     {
-
+        
     }
 
     private void ResetToPhase3()
-    {
-        //Reset Enemy
+    {        
+        enemy.ResetEnemy();
         CloseDoors(doorsToClose3);
     }
 
