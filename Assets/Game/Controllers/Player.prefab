@@ -370,9 +370,10 @@ MonoBehaviour:
   camObject: {fileID: 4347351626365411677}
   birdObject: {fileID: 2366831826386596485}
   birdCamTransform: {fileID: 5420257708642746612}
-  flySpeed: 20
+  flySpeed: 30
   phase3StartTransform: {fileID: 0}
   phase: 0
+  alarmClock: {fileID: 8300000, guid: 5e926c1492cb2d6408daffbf6b482d6a, type: 3}
   isDead: 0
 --- !u!143 &6646267767727592349
 CharacterController:
@@ -447,16 +448,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird
       objectReference: {fileID: 0}
-    - target: {fileID: 1299402905397642983, guid: cee3f2a920445e6469c8fb12321f8d2b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9169407415535573471, guid: cee3f2a920445e6469c8fb12321f8d2b, type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3431218268716883599, guid: cee3f2a920445e6469c8fb12321f8d2b, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cee3f2a920445e6469c8fb12321f8d2b, type: 3}
 --- !u!1 &2366831826386596485 stripped
 GameObject:

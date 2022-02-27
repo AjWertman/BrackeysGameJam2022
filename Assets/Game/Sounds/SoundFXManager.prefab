@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundFXSourcePrefab: {fileID: 7714972397384429532, guid: f17e77a383e7c564cb6cdd4abc0308c2, type: 3}
-  amountOfObjectsToPool: 10
+  amountOfObjectsToPool: 15

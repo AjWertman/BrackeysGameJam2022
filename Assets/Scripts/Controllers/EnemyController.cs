@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent navMeshAgent = null;
     float caughtDistance = 0;
 
+    AudioSource audioSource = null;
+
     bool isActivated = false;
 
     Vector3 startPosition = Vector3.zero;
@@ -21,6 +23,8 @@ public class EnemyController : MonoBehaviour
 
         navMeshAgent = GetComponent<NavMeshAgent>();
         caughtDistance = navMeshAgent.stoppingDistance;
+
+        audioSource = GetComponentInChildren<AudioSource>();
     }
 
     private void Start()
@@ -58,11 +62,21 @@ public class EnemyController : MonoBehaviour
         transform.position = startPosition;
         transform.rotation = startRotation;
         navMeshAgent.enabled = true;
+        audioSource.Stop();
     }
 
     public void SetIsActivated(bool _isActivated)
     {
         isActivated = _isActivated;
+
+        if (isActivated)
+        {
+            audioSource.Play();
+        }
+        else
+        {
+            audioSource.Stop();
+        }
     }
 
     public bool IsActivated()

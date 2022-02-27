@@ -16,9 +16,16 @@ public class WhaleManager : MonoBehaviour
 
     bool isActive = false;
     bool canHandleSpawner = false;
+    bool canMakeSoundFX = true;
+
+    SoundFXManager sfxManager = null;
+
+    [SerializeField] AudioClip whaleSound0;
+    [SerializeField] AudioClip whaleSound1;
 
     private void Awake()
     {
+        sfxManager = FindObjectOfType<SoundFXManager>();
         whaleSpawners = FindObjectsOfType<WhaleSpawner>();
     }
 
@@ -30,9 +37,35 @@ public class WhaleManager : MonoBehaviour
     private void Update()
     {
         if (!isActive) return;
+
+        if (canMakeSoundFX)
+        {
+            canMakeSoundFX = false;
+            StartCoroutine(HandleSFX());
+        }
+
         if (!canHandleSpawner) return;
 
         StartCoroutine(HandleSpawners());
+    }
+
+    private IEnumerator HandleSFX()
+    {
+        AudioClip randomClip = null;
+        int randomClipIndex = UnityEngine.Random.Range(0, 2);
+        if (randomClipIndex == 0)
+        {
+            randomClip = whaleSound0;
+        }
+        else
+        {
+            randomClip = whaleSound1;
+        }
+
+        float randomTimeBetweenSfx = UnityEngine.Random.Range(2, 5);
+        sfxManager.CreateSoundFX(randomClip, null);
+        yield return new WaitForSeconds(randomTimeBetweenSfx);
+        canMakeSoundFX = true;
     }
 
     public void ActivateWhalePhase()
@@ -52,6 +85,7 @@ public class WhaleManager : MonoBehaviour
         {
             spawner.gameObject.SetActive(false);
         }
+        StopAllCoroutines();
 
         isActive = false;
     }

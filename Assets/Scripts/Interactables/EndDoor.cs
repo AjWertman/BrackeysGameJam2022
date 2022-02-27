@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndDoor : MonoBehaviour
 {
     [SerializeField] GameObject endScreen = null;
+    [SerializeField] Button mainMenuButton = null;
+    [SerializeField] Button quitGameButton = null;
     [SerializeField] AudioClip alarmClock = null;
 
     SoundFXManager soundFXManager = null;
@@ -15,8 +18,10 @@ public class EndDoor : MonoBehaviour
 
     private void Awake()
     {
+        mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene(0));
+        quitGameButton.onClick.AddListener(() => Application.Quit());
         endScreen.SetActive(false);
-        endScreen.GetComponentInChildren<Button>().onClick.AddListener(() => Application.Quit());
+
         enemy = FindObjectOfType<EnemyController>();
         myDoor = GetComponent<Door>();
         fader = FindObjectOfType<Fader>();
@@ -33,5 +38,7 @@ public class EndDoor : MonoBehaviour
 
         fader.GetComponent<CanvasGroup>().alpha = 0;
         endScreen.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }

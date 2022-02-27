@@ -11,8 +11,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Button startButton = null;
     [SerializeField] Button quitButton = null;
 
-    [SerializeField] AudioClip alarmClock = null;
-
     Fader fader = null;
     SoundFXManager sfXManager = null;
 
@@ -41,5 +39,6 @@ public class MainMenu : MonoBehaviour
     {
         yield return fader.FadeOut(2, Color.white, null);
         yield return SceneManager.LoadSceneAsync(1);
+        yield return fader.FadeIn(1);
     }
 }

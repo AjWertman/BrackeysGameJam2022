@@ -18,8 +18,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] PlayerPhase phase = PlayerPhase.One;
 
-    [SerializeField] AudioClip alarmClock = null;
-
     Camera mainCam = null;
     Vector3 camStartPos = Vector3.zero;
     Quaternion camStartRot = Quaternion.identity;
@@ -34,6 +32,9 @@ public class PlayerController : MonoBehaviour
     MorningTasksSequence morningTasksSequence = null;
     RaycastableObject currentRaycastableObject = null;
     SoundFXManager soundFXManager = null;
+
+    [SerializeField] AudioClip footstepsClip;
+    AudioSource footstepsAudioSource = null;
 
     CharacterController characterController = null;
     Vector3 moveDirection = Vector3.zero;
@@ -55,12 +56,14 @@ public class PlayerController : MonoBehaviour
         checkpointManager = FindObjectOfType<CheckpointManager>();
         morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
         uiCanvas.onControlsClose += () => StartCoroutine(SetNewPhase(PlayerPhase.One));
+
     }
 
     private void Start()
     {
         camStartPos = mainCam.transform.localPosition;
         camStartRot = mainCam.transform.localRotation;
+        SetupFootstepsAudioSource();
 
         StartCoroutine(StartGame());
     }
@@ -69,8 +72,6 @@ public class PlayerController : MonoBehaviour
     {
         ActivateFirstPersonController(false);
         ActivateCursor(true);
-        yield return soundFXManager.CreateSoundFXCoroutine(alarmClock, null);
-        yield return fader.FadeIn(1);
 
         yield return new WaitForSeconds(1f);
         uiCanvas.ActivateControls();
@@ -109,6 +110,8 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleRaycasts();
+
+        HandleFootsteps();
     }
 
     public void SetPlayerPhase(PlayerPhase newPhase)
@@ -154,6 +157,7 @@ public class PlayerController : MonoBehaviour
 
     private void Fly()
     {
+        if (characterController.enabled == false) return;
         moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 1).normalized;
         characterController.Move(moveDirection * flySpeed * Time.deltaTime);
     }
@@ -315,5 +319,37 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(lightSpeedSequence.ActivateLightSpeedSequence(mainCam));
         yield return null;
         StartCoroutine(SetNewPhase(PlayerPhase.Three));
+    }
+
+    private void HandleFootsteps()
+    {
+        float vaxis = Input.GetAxis("Vertical");
+        float haxis = Input.GetAxis("Horizontal");
+
+        bool input = vaxis > 0 || haxis > 0;
+
+        if (input && rb.velocity.magnitude>0 && firstPersonController.Grounded)
+        {
+            if (footstepsAudioSource.isPlaying) return;
+            footstepsAudioSource.Play();
+        }
+        else
+        {
+            if (!footstepsAudioSource.isPlaying) return;
+            footstepsAudioSource.Stop();
+        }
+    }
+
+    private void SetupFootstepsAudioSource()
+    {
+        footstepsAudioSource = soundFXManager.AssignNewAudioSource();
+
+        footstepsAudioSource.Stop();
+        footstepsAudioSource.clip = footstepsClip;
+        footstepsAudioSource.volume = .25f;
+
+        footstepsAudioSource.transform.parent = transform;
+        footstepsAudioSource.transform.localPosition = Vector3.zero;
+        footstepsAudioSource.loop = true;
     }
 }

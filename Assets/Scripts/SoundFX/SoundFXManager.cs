@@ -9,7 +9,7 @@ public class SoundFXManager : MonoBehaviour
 
     Dictionary<AudioSource, bool> soundFXSourceInstances = new Dictionary<AudioSource, bool>();
 
-    private void Start()
+    private void Awake()
     {
         CreateSoundFXObjects();
     }
@@ -55,6 +55,13 @@ public class SoundFXManager : MonoBehaviour
 
             soundFXSourceInstances.Add(audioSource, false);
         }
+    }
+
+    public AudioSource AssignNewAudioSource()
+    {
+        AudioSource availableAudioSource = GetAvailableAudioSource();
+        soundFXSourceInstances[availableAudioSource] = true;
+        return availableAudioSource;
     }
 
     private AudioSource GetAvailableAudioSource()
