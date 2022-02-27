@@ -26,6 +26,7 @@ public class BirdTransformation : MonoBehaviour
     {
         if (hasBegunTransformation) yield break;
         hasBegunTransformation = true;
+
         oobToTurnOff.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(timeToTransformation);
