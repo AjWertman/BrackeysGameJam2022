@@ -55,7 +55,11 @@ public class Door : RaycastableObject
             objectToOpen.gameObject.SetActive(shouldSetActive);
         }
 
-        soundFXManager.CreateSoundFX(doorSound, transform);
+        if(doorSound!= null)
+        {
+            soundFXManager.CreateSoundFX(doorSound, transform);
+        }
+
         if (isTrap || isEndDoor)
         {
             onOpen();
