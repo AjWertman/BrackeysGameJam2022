@@ -5,8 +5,16 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] GameObject faderPrefab = null;
+    [SerializeField] GameObject soundFXManagerPrefab = null;
+
     [SerializeField] Button startButton = null;
     [SerializeField] Button quitButton = null;
+
+    [SerializeField] AudioClip alarmClock = null;
+
+    Fader fader = null;
+    SoundFXManager sfXManager = null;
 
     private void Awake()
     {
@@ -14,14 +22,24 @@ public class MainMenu : MonoBehaviour
         quitButton.onClick.AddListener(() => Application.Quit());
     }
 
-    //replace find fader to fader that persists
+    private void Start()
+    {
+        GameObject faderInstance = Instantiate(faderPrefab);
+        fader = faderInstance.GetComponent<Fader>();
+        fader.GetComponent<CanvasGroup>().alpha = 0;
+
+        DontDestroyOnLoad(faderInstance);
+
+        GameObject soundManagerInstance = Instantiate(soundFXManagerPrefab);
+        sfXManager = soundManagerInstance.GetComponent<SoundFXManager>();
+
+        DontDestroyOnLoad(faderInstance);
+        DontDestroyOnLoad(sfXManager);
+    }
+
     private IEnumerator StartGame()
     {
-        yield return FindObjectOfType<Fader>().FadeOut(2, Color.white, null);
+        yield return fader.FadeOut(2, Color.white, null);
         yield return SceneManager.LoadSceneAsync(1);
-        //Play alarm clock
-        yield return FindObjectOfType<Fader>().FadeIn(1);
-        //Start scene 1
-        //activate controls page
     }
 }

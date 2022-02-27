@@ -5,12 +5,15 @@ public class Door : RaycastableObject
 {
     [SerializeField] GameObject objectToOpen = null;
 
+    [SerializeField] AudioClip doorSound = null;
+
     [SerializeField] bool isTrap = false;
     [SerializeField] bool isLocked = true;
 
     [SerializeField] bool isEndDoor = false;
 
     Animator animator = null;
+    SoundFXManager soundFXManager = null;
 
     bool isOpen = false;
     //add to sound manager
@@ -20,6 +23,7 @@ public class Door : RaycastableObject
     {
         base.Awake();
         animator = objectToOpen.GetComponent<Animator>();
+        soundFXManager = FindObjectOfType<SoundFXManager>();
     }
 
     public void Update()
@@ -51,10 +55,7 @@ public class Door : RaycastableObject
             objectToOpen.gameObject.SetActive(shouldSetActive);
         }
 
-        //bool isOpen = animator.GetBool("open");
-        //animator.SetBool("open", !isOpen);
-
-        //Add sound fx so you dont need the isTrap or isEndDoor variable
+        soundFXManager.CreateSoundFX(doorSound, transform);
         if (isTrap || isEndDoor)
         {
             onOpen();

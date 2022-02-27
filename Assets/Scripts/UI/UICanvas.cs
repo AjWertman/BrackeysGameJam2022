@@ -1,13 +1,23 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UICanvas : MonoBehaviour
 {
+    [SerializeField] GameObject controlsPage = null;
+    [SerializeField] Button controlsButton = null;
+
     [SerializeField] TextMeshProUGUI activationText = null;
+
+    public event Action onControlsClose;
 
     private void Start()
     {
         DeactivateActivationText();
+
+        controlsButton.onClick.AddListener(() => DeactivateControls());
+        controlsPage.SetActive(true);
     }
 
     public void ActivateActivationText(string activationString)
@@ -24,5 +34,16 @@ public class UICanvas : MonoBehaviour
 
         activationText.gameObject.SetActive(false);
         activationText.text = "";
+    }
+
+    public void DeactivateControls()
+    {
+        controlsPage.SetActive(false);
+        onControlsClose();
+    }
+
+    public void ActivateControls()
+    {
+        controlsPage.SetActive(true);
     }
 }

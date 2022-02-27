@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] PlayerPhase phase = PlayerPhase.One;
 
+    [SerializeField] AudioClip alarmClock = null;
+
     Camera mainCam = null;
     Vector3 camStartPos = Vector3.zero;
     Quaternion camStartRot = Quaternion.identity;
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour
     CheckpointManager checkpointManager = null;
     MorningTasksSequence morningTasksSequence = null;
     RaycastableObject currentRaycastableObject = null;
+    SoundFXManager soundFXManager = null;
 
     CharacterController characterController = null;
     Vector3 moveDirection = Vector3.zero;
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
         mainCam = camObject.GetComponent<Camera>();
         firstPersonController = GetComponent<RigidbodyFirstPersonController>();
         characterController = GetComponent<CharacterController>();
+        soundFXManager = FindObjectOfType<SoundFXManager>();
         rb = GetComponent<Rigidbody>();
         uiCanvas = FindObjectOfType<UICanvas>();
         fader = FindObjectOfType<Fader>();
@@ -50,6 +54,7 @@ public class PlayerController : MonoBehaviour
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
         morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
+        uiCanvas.onControlsClose += () => StartCoroutine(SetNewPhase(PlayerPhase.One));
     }
 
     private void Start()
@@ -57,8 +62,18 @@ public class PlayerController : MonoBehaviour
         camStartPos = mainCam.transform.localPosition;
         camStartRot = mainCam.transform.localRotation;
 
-        ActivateCursor(false);
-        StartCoroutine(SetNewPhase(phase));
+        StartCoroutine(StartGame());
+    }
+
+    private IEnumerator StartGame()
+    {
+        ActivateFirstPersonController(false);
+        ActivateCursor(true);
+        yield return soundFXManager.CreateSoundFXCoroutine(alarmClock, null);
+        yield return fader.FadeIn(1);
+
+        yield return new WaitForSeconds(1f);
+        uiCanvas.ActivateControls();
     }
 
     private static void ActivateCursor(bool shouldActivate)
@@ -79,8 +94,6 @@ public class PlayerController : MonoBehaviour
     { 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //uiCanvas.ActivatePauseMenu();
-
             ActivateCursor(true);
         }
 
@@ -156,17 +169,8 @@ public class PlayerController : MonoBehaviour
     {
         phase = _phase;
 
-        string faderString = "Moving to next phase";
-
-        if(phase== PlayerPhase.One)
-        {
-            faderString = "Starting game";
-        }
-
-        yield return fader.FadeOut(1f, Color.black, faderString);
-
         if (phase == PlayerPhase.One)
-        {
+        {       
             birdObject.SetActive(false);
             ActivateFirstPersonController(true);
             characterController.enabled = false;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoundFXManager : MonoBehaviour
 {
     [SerializeField] GameObject soundFXSourcePrefab = null;
-    [SerializeField] int amountOfObjectsToPool = 10;
+    [SerializeField] int amountOfObjectsToPool = 20;
 
     Dictionary<AudioSource, bool> soundFXSourceInstances = new Dictionary<AudioSource, bool>();
 
@@ -14,8 +14,18 @@ public class SoundFXManager : MonoBehaviour
         CreateSoundFXObjects();
     }
 
-    public IEnumerator CreateSoundFX(AudioClip clip, Transform clipLocation)
+    public void CreateSoundFX(AudioClip clip, Transform clipLocation)
     {
+        StartCoroutine(CreateSoundFXCoroutine(clip, clipLocation));
+    }
+
+    public IEnumerator CreateSoundFXCoroutine(AudioClip clip, Transform clipLocation)
+    {
+        if (clipLocation == null)
+        {
+            clipLocation = Camera.main.transform;
+        }
+
         AudioSource availableAudioSource = GetAvailableAudioSource();
         soundFXSourceInstances[availableAudioSource] = true;
 
@@ -26,12 +36,14 @@ public class SoundFXManager : MonoBehaviour
         availableAudioSource.transform.parent = clipLocation;
         availableAudioSource.transform.localPosition = Vector3.zero;
 
+        availableAudioSource.Play();
+
         yield return new WaitForSeconds(clipLength);
 
+        soundFXSourceInstances[availableAudioSource] = false;
         availableAudioSource.clip = null;
         availableAudioSource.transform.parent = transform;
         availableAudioSource.transform.localPosition = Vector3.zero;
-
     }
 
     private void CreateSoundFXObjects()
