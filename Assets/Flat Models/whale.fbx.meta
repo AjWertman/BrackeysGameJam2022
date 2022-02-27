@@ -1,14 +1,17 @@
 fileFormatVersion: 2
-guid: 81b21c7172edb4240a221b667d7555cf
+guid: a027ed869bae5ae4780f45f74089ae14
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
-      74: -1823582324497641488
-    second: Fish_Armature|Fish_ArmatureAction
+      74: 7681284574536232046
+    second: Whale_Armature|Fish_ArmatureAction
   - first:
-      74: -1669914314275127472
-    second: Fish_Armature|Fish_ArmatureAction.001
+      74: 5257162643794794041
+    second: Whale_Armature|Fish_ArmatureAction.001
+  - first:
+      74: -5107582863992708039
+    second: Whale_Armature|Whale_ArmatureAction
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -38,11 +41,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Fish_Armature|Fish_ArmatureAction.001
-      takeName: Fish_Armature|Fish_ArmatureAction.001
+      name: Whale_Armature|Whale_ArmatureAction
+      takeName: Whale_Armature|Whale_ArmatureAction
       internalID: 0
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 99
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
