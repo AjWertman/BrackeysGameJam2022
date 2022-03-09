@@ -6346,6 +6346,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3039161617170824236}
     m_Modifications:
+    - target: {fileID: 1344407274277147711, guid: 4939dbdaae84c7e41b8811b90288b276, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2019418714058237515, guid: 4939dbdaae84c7e41b8811b90288b276, type: 3}
       propertyPath: m_Name
       value: Radio
@@ -11009,6 +11013,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -100.48
       objectReference: {fileID: 0}
+    - target: {fileID: 2911622746742906613, guid: 9163b14c5f6293145a70a28fff093adb, type: 3}
+      propertyPath: activationText
+      value: Open the Door
+      objectReference: {fileID: 0}
     - target: {fileID: 2911622747214524078, guid: 9163b14c5f6293145a70a28fff093adb, type: 3}
       propertyPath: m_LocalPosition.y
       value: -99.45
@@ -11484,6 +11492,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1747b2e626c3cca47a8e1b4a5aecfe1d, type: 2}
+    - target: {fileID: 5358536590392610380, guid: 6f80e1dd583398845af8e12774fa9f8b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5907595677491048714, guid: 6f80e1dd583398845af8e12774fa9f8b, type: 3}
       propertyPath: m_Name
       value: Toothbrush
@@ -13778,6 +13790,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Picture Frame (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6331497079029599858, guid: d6f4b88588a79484da9ce720c4095027, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7593152143975143057, guid: d6f4b88588a79484da9ce720c4095027, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -14273,6 +14289,10 @@ PrefabInstance:
     - target: {fileID: 4871992770531516664, guid: efa2e9b0b2edb5d44a487095468738b7, type: 3}
       propertyPath: m_Name
       value: Chair
+      objectReference: {fileID: 0}
+    - target: {fileID: 4871992770531516664, guid: efa2e9b0b2edb5d44a487095468738b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4871992770531516668, guid: efa2e9b0b2edb5d44a487095468738b7, type: 3}
       propertyPath: m_RootOrder
@@ -15508,6 +15528,10 @@ PrefabInstance:
     - target: {fileID: 1026322370627465102, guid: 4c2e304ec67f475429fbeaa042bab3f5, type: 3}
       propertyPath: m_Name
       value: whale
+      objectReference: {fileID: 0}
+    - target: {fileID: 1026322370627465102, guid: 4c2e304ec67f475429fbeaa042bab3f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c2e304ec67f475429fbeaa042bab3f5, type: 3}
@@ -19075,6 +19099,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Desk
       objectReference: {fileID: 0}
+    - target: {fileID: 1227185781655104714, guid: 431c480e10f0bf74fbd9f44572284794, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047957443961959254, guid: 431c480e10f0bf74fbd9f44572284794, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -19141,6 +19169,10 @@ PrefabInstance:
     - target: {fileID: 1909516295378677308, guid: f0dd97430dd79e14c9a22528733411d3, type: 3}
       propertyPath: m_Name
       value: Locker
+      objectReference: {fileID: 0}
+    - target: {fileID: 1909516295378677308, guid: f0dd97430dd79e14c9a22528733411d3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4219773268154896320, guid: f0dd97430dd79e14c9a22528733411d3, type: 3}
       propertyPath: m_RootOrder
@@ -19325,6 +19357,10 @@ PrefabInstance:
     - target: {fileID: 6513745081035136969, guid: f062cce55dd03cb42bdc260c1feb773b, type: 3}
       propertyPath: m_Name
       value: Rock_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6513745081035136969, guid: f062cce55dd03cb42bdc260c1feb773b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7635727425640141967, guid: f062cce55dd03cb42bdc260c1feb773b, type: 3}
       propertyPath: m_RootOrder
@@ -19548,6 +19584,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_6
       objectReference: {fileID: 0}
+    - target: {fileID: 7449753706372306509, guid: 1ebe2debae871e64cb0a0a3013dc096c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ebe2debae871e64cb0a0a3013dc096c, type: 3}
 --- !u!1001 &4218220232798910733
@@ -19696,6 +19736,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 4554815969060552185, guid: e93996cd29543374dbf31cf4292f0856, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8538704443359884330, guid: e93996cd29543374dbf31cf4292f0856, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -19797,6 +19841,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: fish (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5685130210726104545, guid: f83686cc04d4e7942a066e7cce7d0f53, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f83686cc04d4e7942a066e7cce7d0f53, type: 3}
 --- !u!1001 &4792300494408739025
@@ -19853,6 +19901,10 @@ PrefabInstance:
     - target: {fileID: 5588002534320254333, guid: 860d0e06bde26664e93dcf0a4cf772ec, type: 3}
       propertyPath: m_Name
       value: Rock_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5588002534320254333, guid: 860d0e06bde26664e93dcf0a4cf772ec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6584800073607249875, guid: 860d0e06bde26664e93dcf0a4cf772ec, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -19920,6 +19972,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Island_2
       objectReference: {fileID: 0}
+    - target: {fileID: 7640472781331204816, guid: 2fbaf8c128eb065458a6915a2094552d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8780650607070875188, guid: 2fbaf8c128eb065458a6915a2094552d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -19941,6 +19997,10 @@ PrefabInstance:
     - target: {fileID: 5358536590392610380, guid: 6f80e1dd583398845af8e12774fa9f8b, type: 3}
       propertyPath: m_Name
       value: Toothbrush
+      objectReference: {fileID: 0}
+    - target: {fileID: 5358536590392610380, guid: 6f80e1dd583398845af8e12774fa9f8b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7337532086873603293, guid: 6f80e1dd583398845af8e12774fa9f8b, type: 3}
       propertyPath: m_RootOrder
@@ -19998,6 +20058,10 @@ PrefabInstance:
     - target: {fileID: 4619060355876343986, guid: 555bc4c0c3f6a624d91ddf1d7eb19731, type: 3}
       propertyPath: m_Name
       value: Rock_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4619060355876343986, guid: 555bc4c0c3f6a624d91ddf1d7eb19731, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8678159619188582071, guid: 555bc4c0c3f6a624d91ddf1d7eb19731, type: 3}
       propertyPath: m_RootOrder
@@ -20441,6 +20505,10 @@ PrefabInstance:
     - target: {fileID: 4946623825374033847, guid: 9ac9d09ce71a6b14db37fe1dffd06d17, type: 3}
       propertyPath: m_Name
       value: Rock_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4946623825374033847, guid: 9ac9d09ce71a6b14db37fe1dffd06d17, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6232242715278828277, guid: 9ac9d09ce71a6b14db37fe1dffd06d17, type: 3}
       propertyPath: m_RootOrder
@@ -20886,7 +20954,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6749091710731463342
 Transform:
   m_ObjectHideFlags: 0
@@ -21110,7 +21178,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6749091711005369652
 Transform:
   m_ObjectHideFlags: 0
@@ -21619,7 +21687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6749091711617814972
 Transform:
   m_ObjectHideFlags: 0
@@ -22149,6 +22217,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Island_1
       objectReference: {fileID: 0}
+    - target: {fileID: 2226442753871731405, guid: 6536264c18130cd4f99f47df2687d7b8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4399885165447171397, guid: 6536264c18130cd4f99f47df2687d7b8, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -22271,6 +22343,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SteppingStone
       objectReference: {fileID: 0}
+    - target: {fileID: 6411675207754636588, guid: 4dd6c8ba3a1f13741a783e1cb37a0c01, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6573384692336998550, guid: 4dd6c8ba3a1f13741a783e1cb37a0c01, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -22331,6 +22407,10 @@ PrefabInstance:
     - target: {fileID: 1506585726000542567, guid: 4529f85d98e409b428ae7e40a82ebbb6, type: 3}
       propertyPath: m_Name
       value: Rock_5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1506585726000542567, guid: 4529f85d98e409b428ae7e40a82ebbb6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5913435811165557105, guid: 4529f85d98e409b428ae7e40a82ebbb6, type: 3}
       propertyPath: m_RootOrder
