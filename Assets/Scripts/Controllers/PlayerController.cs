@@ -14,27 +14,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform birdCamTransform = null;
     [SerializeField] float flySpeed = 20f;
 
-    [SerializeField] Transform phase3StartTransform = null;
-
-    [SerializeField] PlayerPhase phase = PlayerPhase.One;
-
-    Camera mainCam = null;
-    Vector3 camStartPos = Vector3.zero;
-    Quaternion camStartRot = Quaternion.identity;
+    [SerializeField] PlayerPhase currentPhase = PlayerPhase.One;
 
     RigidbodyFirstPersonController firstPersonController = null;
     Rigidbody rb = null;
     UICanvas uiCanvas = null;
     Fader fader = null;
-    MusicPlayer musicPlayer = null;
+    MusicPlayer musicPlayer = null; 
+    SoundFXManager soundFXManager = null;
 
     CheckpointManager checkpointManager = null;
-    MorningTasksSequence morningTasksSequence = null;
-    RaycastableObject currentRaycastableObject = null;
-    SoundFXManager soundFXManager = null;
+
+    Camera mainCam = null;
+    Vector3 camStartPos = Vector3.zero;
+    Quaternion camStartRot = Quaternion.identity;
 
     [SerializeField] AudioClip footstepsClip;
     AudioSource footstepsAudioSource = null;
+
+    Transform currentCheckpoint = null;
+    RaycastableObject currentRaycastableObject = null;
 
     CharacterController characterController = null;
     Vector3 moveDirection = Vector3.zero;
@@ -47,16 +46,16 @@ public class PlayerController : MonoBehaviour
         mainCam = camObject.GetComponent<Camera>();
         firstPersonController = GetComponent<RigidbodyFirstPersonController>();
         characterController = GetComponent<CharacterController>();
-        soundFXManager = FindObjectOfType<SoundFXManager>();
         rb = GetComponent<Rigidbody>();
+
         uiCanvas = FindObjectOfType<UICanvas>();
+        soundFXManager = FindObjectOfType<SoundFXManager>();
         fader = FindObjectOfType<Fader>();
         musicPlayer = FindObjectOfType<MusicPlayer>();
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
-        morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
-        uiCanvas.onControlsClose += () => StartCoroutine(SetNewPhase(PlayerPhase.One));
 
+        uiCanvas.onControlsClose += () => SetPlayerPhase(PlayerPhase.One);
     }
 
     private void Start()
@@ -68,31 +67,8 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(StartGame());
     }
 
-    private IEnumerator StartGame()
-    {
-        ActivateFirstPersonController(false);
-        ActivateCursor(true);
-
-        yield return new WaitForSeconds(1f);
-        uiCanvas.ActivateControls();
-    }
-
-    private static void ActivateCursor(bool shouldActivate)
-    {
-        if (shouldActivate)
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        Cursor.visible = shouldActivate;
-    }
-
     private void Update()
-    { 
+    {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ActivateCursor(true);
@@ -103,20 +79,25 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        if(phase == PlayerPhase.Two)
+        if (currentPhase == PlayerPhase.Two)
         {
             if (!canFly) return;
-            Fly();
+            FlyForward();
         }
-
-        HandleRaycasts();
-
-        HandleFootsteps();
+        else
+        { 
+            HandleRaycasts();
+            HandleFootsteps();
+        }
     }
 
-    public void SetPlayerPhase(PlayerPhase newPhase)
+    private IEnumerator StartGame()
     {
-        phase = newPhase;
+        ActivateFirstPersonController(false);
+        ActivateCursor(true);
+
+        yield return new WaitForSeconds(1f);
+        uiCanvas.ActivateControls();
     }
 
     private void HandleRaycasts()
@@ -129,7 +110,8 @@ public class PlayerController : MonoBehaviour
             RaycastableObject raycast = hit.collider.GetComponentInParent<RaycastableObject>();
 
             currentRaycastableObject = raycast;
-        }     
+        }
+        else return;
 
         if (currentRaycastableObject != null)
         {
@@ -147,19 +129,12 @@ public class PlayerController : MonoBehaviour
             else
             {
                 uiCanvas.DeactivateActivationText();
-            }          
+            }
         }
         else
         {
             uiCanvas.DeactivateActivationText();
         }
-    }
-
-    private void Fly()
-    {
-        if (characterController.enabled == false) return;
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 1).normalized;
-        characterController.Move(moveDirection * flySpeed * Time.deltaTime);
     }
 
     public void StartFlying()
@@ -169,46 +144,74 @@ public class PlayerController : MonoBehaviour
         transform.LookAt(lookPosition);
     }
 
-    public IEnumerator SetNewPhase(PlayerPhase _phase)
+    private void FlyForward()
     {
-        phase = _phase;
+        if (characterController.enabled == false) return;
+        moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 1).normalized;
+        characterController.Move(moveDirection * flySpeed * Time.deltaTime);
+    }
 
-        if (phase == PlayerPhase.One)
-        {       
-            birdObject.SetActive(false);
-            ActivateFirstPersonController(true);
-            characterController.enabled = false;
-            canFly = false;
-            morningTasksSequence.BeginMorningTasksSequence();
+    public IEnumerator Die()
+    {
+        if (!isDead)
+        {
+            isDead = true;
+            yield return DeathBehavior();
         }
-        else if (phase == PlayerPhase.Two)
+    }
+
+    private IEnumerator DeathBehavior()
+    {
+        if (fader != null)
+        {
+            yield return fader.FadeOut(1, Color.black, null);
+        }
+        
+        if (currentPhase != PlayerPhase.Two)
         {
             ActivateFirstPersonController(false);
-
-            mainCam.transform.position = birdCamTransform.position;
-            mainCam.transform.rotation = birdCamTransform.rotation;
-
-            characterController.enabled = true;
-            birdObject.SetActive(true);
-            StartFlying();
         }
-        else if (phase == PlayerPhase.Three)
-        {           
-            birdObject.SetActive(false);
+        else
+        {
             characterController.enabled = false;
-            canFly = false;
-
-            transform.position = phase3StartTransform.position;
-            transform.rotation = phase3StartTransform.rotation;
-
-            ActivateFirstPersonController(true);
-
-            fader.GetComponent<CanvasGroup>().alpha = 0;
         }
 
-        musicPlayer.SetSong(phase);
+        transform.position = currentCheckpoint.position;
+        mainCam.transform.localEulerAngles = Vector3.zero;
 
-        yield return fader.FadeIn(1);
+        yield return new WaitForSeconds(1);
+
+        if (currentPhase != PlayerPhase.Two)
+        {
+            ActivateFirstPersonController(true);
+        }
+        else
+        {
+            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
+            transform.LookAt(lookPosition);
+            characterController.enabled = true;
+        }
+
+        isDead = false;
+
+        if (fader != null)
+        {
+            yield return fader.FadeIn(1);
+        }          
+    }
+
+    private static void ActivateCursor(bool shouldActivate)
+    {
+        if (shouldActivate)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        Cursor.visible = shouldActivate;
     }
 
     public void ActivateFirstPersonController(bool shouldActivate)
@@ -224,77 +227,112 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public IEnumerator Die()
+    public void SetPlayerPhase(PlayerPhase newPhase)
     {
-        if (!isDead)
-        {
-            isDead = true;
-            yield return DeathBehavior();
+        currentPhase = newPhase;
 
-        }
+        StartCoroutine(HandlePhaseChanges());
     }
 
-    private IEnumerator DeathBehavior()
+    public IEnumerator HandlePhaseChanges()
     {
-        yield return fader.FadeOut(1, Color.black, null);
+        if (currentPhase == PlayerPhase.One)
+        {
+            birdObject.SetActive(false);
+            ActivateFirstPersonController(true);
+            characterController.enabled = false;
+            canFly = false;
 
-        if (phase != PlayerPhase.Two)
+            //Setup later
+            //morningTasksSequence.BeginMorningTasksSequence();
+        }
+        else if (currentPhase == PlayerPhase.Two)
         {
             ActivateFirstPersonController(false);
-        }
-        else
-        {
-            characterController.enabled = false;
-        }
 
-        checkpointManager.ResetToLastCheckpoint(phase);
-        Transform checkpointTransform = checkpointManager.GetCheckpointPosition(phase);
+            mainCam.transform.position = birdCamTransform.position;
+            mainCam.transform.rotation = birdCamTransform.rotation;
 
-        transform.position = checkpointTransform.position;
-        transform.rotation = checkpointTransform.rotation;
-
-        yield return new WaitForSeconds(1);
-
-        if (phase != PlayerPhase.Two)
-        {
-            ActivateFirstPersonController(true);           
-        }
-        else
-        {
-            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
-            transform.LookAt(lookPosition);
             characterController.enabled = true;
+            birdObject.SetActive(true);
+            StartFlying();
         }
-    
-        isDead = false;
+        else if (currentPhase == PlayerPhase.Three)
+        {
+            birdObject.SetActive(false);
+            characterController.enabled = false;
+            canFly = false;
 
+            Transform phase3StartTransform = checkpointManager.GetPhase3StartTransform();
+            transform.position = phase3StartTransform.position;
+            transform.rotation = phase3StartTransform.rotation;
+
+            currentCheckpoint = checkpointManager.GetPhase3Checkpoint();
+
+            ActivateFirstPersonController(true);
+        }
+
+        musicPlayer.SetSong(currentPhase);
+
+        if (fader == null) yield break;
         yield return fader.FadeIn(1);
+    }
+
+    public void UpdateCheckpoint(Transform _checkpoint)
+    {
+        currentCheckpoint = _checkpoint;
+    }
+
+    private void SetupFootstepsAudioSource()
+    {
+        footstepsAudioSource = soundFXManager.AssignNewAudioSource();
+
+        footstepsAudioSource.Stop();
+        footstepsAudioSource.clip = footstepsClip;
+        footstepsAudioSource.volume = .25f;
+
+        footstepsAudioSource.transform.parent = transform;
+        footstepsAudioSource.transform.localPosition = Vector3.zero;
+        footstepsAudioSource.loop = true;
+    }
+
+    private void HandleFootsteps()
+    {
+        float vaxis = Input.GetAxis("Vertical");
+        float haxis = Input.GetAxis("Horizontal");
+
+        bool input = vaxis > 0 || haxis > 0;
+
+        if (input && rb.velocity.magnitude > 0 && firstPersonController.Grounded)
+        {
+            if (footstepsAudioSource.isPlaying) return;
+            //if(!canPlay) return;
+            //wait for seconds x
+            footstepsAudioSource.Play();
+            //can play = true;
+        }
+        else
+        {
+            if (!footstepsAudioSource.isPlaying) return;
+            footstepsAudioSource.Stop();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(phase == PlayerPhase.One)
-        {
-            Level1CheckpointTrigger level1CheckpointTrigger = other.GetComponent<Level1CheckpointTrigger>();
-
-            if(level1CheckpointTrigger != null)
-            {
-                checkpointManager.ActivateNextLevel1Checkpoint();
-                level1CheckpointTrigger.gameObject.SetActive(false);
-            }
-        }
-        else if(phase == PlayerPhase.Two)
+        if(currentPhase == PlayerPhase.Two)
         {
             LightSpeedSequence lightSpeedSequence = other.GetComponent<LightSpeedSequence>();
 
             if (lightSpeedSequence != null)
-            {
-                StartCoroutine(Phase3Transition(lightSpeedSequence));
+            { 
+                //light speed stuff
+                SetPlayerPhase(PlayerPhase.Three);
                 return;
             }
 
         }
-        else if (phase == PlayerPhase.Three)
+        else if (currentPhase == PlayerPhase.Three)
         {
             SchoolChaseSequence schoolChaseSequence = other.GetComponent<SchoolChaseSequence>();
 
@@ -312,44 +350,5 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(Die());
         }              
-    }
-
-    private IEnumerator Phase3Transition(LightSpeedSequence lightSpeedSequence)
-    {
-        StartCoroutine(lightSpeedSequence.ActivateLightSpeedSequence(mainCam));
-        yield return null;
-        StartCoroutine(SetNewPhase(PlayerPhase.Three));
-    }
-
-    private void HandleFootsteps()
-    {
-        float vaxis = Input.GetAxis("Vertical");
-        float haxis = Input.GetAxis("Horizontal");
-
-        bool input = vaxis > 0 || haxis > 0;
-
-        if (input && rb.velocity.magnitude>0 && firstPersonController.Grounded)
-        {
-            if (footstepsAudioSource.isPlaying) return;
-            footstepsAudioSource.Play();
-        }
-        else
-        {
-            if (!footstepsAudioSource.isPlaying) return;
-            footstepsAudioSource.Stop();
-        }
-    }
-
-    private void SetupFootstepsAudioSource()
-    {
-        footstepsAudioSource = soundFXManager.AssignNewAudioSource();
-
-        footstepsAudioSource.Stop();
-        footstepsAudioSource.clip = footstepsClip;
-        footstepsAudioSource.volume = .25f;
-
-        footstepsAudioSource.transform.parent = transform;
-        footstepsAudioSource.transform.localPosition = Vector3.zero;
-        footstepsAudioSource.loop = true;
     }
 }

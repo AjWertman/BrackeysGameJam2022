@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Door : RaycastableObject
 {
-    [SerializeField] GameObject objectToOpen = null;
-
     [SerializeField] AudioClip doorSound = null;
 
     [SerializeField] bool isTrap = false;
@@ -15,14 +13,13 @@ public class Door : RaycastableObject
     Animator animator = null;
     SoundFXManager soundFXManager = null;
 
-    bool isOpen = false;
     //add to sound manager
     public event Action onOpen;
 
     protected override void Awake()
     {
         base.Awake();
-        animator = objectToOpen.GetComponent<Animator>();
+        animator = GetComponentInParent<Animator>();
         soundFXManager = FindObjectOfType<SoundFXManager>();
     }
 
@@ -40,34 +37,31 @@ public class Door : RaycastableObject
 
     public override void OnClick()
     {
-        OpenDoor(!isOpen);
+        OpenDoor();
     }
 
-    public void OpenDoor(bool shouldOpen)
+    public void OpenDoor()
     {
         if (isLocked == true) return;
-        
-        //Switch to animation insteadof activating
-        bool shouldSetActive = !shouldOpen;
-
-        if (!isEndDoor)
-        {
-            objectToOpen.gameObject.SetActive(shouldSetActive);
-        }
-
-        if(doorSound!= null)
-        {
-            soundFXManager.CreateSoundFX(doorSound, transform);
-        }
 
         if (isTrap || isEndDoor)
         {
-            onOpen();
+             onOpen();
         }
+        else
+        {
+            animator.SetTrigger("open");
+            soundFXManager.CreateSoundFX(doorSound, transform);
+        }
+    }
+
+    public void CloseDoor()
+    {
+        animator.SetTrigger("close");
     }
 
     public void LockDoor(bool shouldLock)
     {
         isLocked = shouldLock;
-    }
+    } 
 }

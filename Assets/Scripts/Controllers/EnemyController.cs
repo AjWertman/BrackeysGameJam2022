@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour
         playerTransform = playerController.transform;
 
         navMeshAgent = GetComponent<NavMeshAgent>();
-        caughtDistance = navMeshAgent.stoppingDistance;
+        caughtDistance = navMeshAgent.stoppingDistance - .5f;
 
         audioSource = GetComponentInChildren<AudioSource>();
     }

@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AlarmClock : MonoBehaviour
 {
     AudioSource audioSource = null;
-    SoundFXManager fXManager = null;
+    //SoundFXManager fXManager = null;
     MorningTask morningTask = null;
 
     private void Awake()
@@ -14,16 +12,15 @@ public class AlarmClock : MonoBehaviour
         morningTask.onTaskComplete += TurnOff;
     }
 
-    private void Start()
+    public void BeginAlarmClock()
     {
-        //audioSource =GetComponent<AudioSource>();
-        //audioSource.loop = true;
-        //audioSource.clip = alarmClock;
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
 
-        //audioSource.transform.parent = transform;
-        //audioSource.transform.localPosition = Vector3.zero;
+        audioSource.transform.parent = transform;
+        audioSource.transform.localPosition = Vector3.zero;
 
-        //audioSource.Play();
+        audioSource.Play();
     }
 
     public void TurnOff()

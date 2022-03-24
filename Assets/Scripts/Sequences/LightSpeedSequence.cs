@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LightSpeedSequence : MonoBehaviour
@@ -14,6 +13,12 @@ public class LightSpeedSequence : MonoBehaviour
 
     public IEnumerator ActivateLightSpeedSequence(Camera mainCamera)
     {
+
+        //Activate light speed
+        //Wait x seconds
+        //transport to phase three
+        //unactivate lightspeed
+
         if (!sequenceStarted)
         {
             sequenceStarted = true;

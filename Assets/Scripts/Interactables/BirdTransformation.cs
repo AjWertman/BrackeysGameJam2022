@@ -1,12 +1,11 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BirdTransformation : MonoBehaviour
 {
     [SerializeField] float timeToTransformation = 5f;
     [SerializeField] GameObject oobToTurnOff = null;
+    [SerializeField] GameObject floorToOpen = null;
 
     WhaleManager whaleManager = null;
     Door doorParent = null;
@@ -28,10 +27,11 @@ public class BirdTransformation : MonoBehaviour
         hasBegunTransformation = true;
 
         oobToTurnOff.gameObject.SetActive(false);
+        floorToOpen.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(timeToTransformation);
 
-        StartCoroutine(player.SetNewPhase(PlayerPhase.Two));
+        player.SetPlayerPhase(PlayerPhase.Two);
 
         whaleManager.ActivateWhalePhase();
     }

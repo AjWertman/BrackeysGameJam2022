@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SchoolChaseSequence : MonoBehaviour
@@ -9,7 +7,7 @@ public class SchoolChaseSequence : MonoBehaviour
 
     public void BeginChaseSequence()
     {
-        enemyDoor.OpenDoor(true);
+        enemyDoor.OpenDoor();
         enemy.SetIsActivated(true);
     }
 }

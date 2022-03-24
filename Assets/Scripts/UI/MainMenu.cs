@@ -22,6 +22,11 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        CreateCoreObjects();
+    }
+
+    private void CreateCoreObjects()
+    {
         GameObject faderInstance = Instantiate(faderPrefab);
         fader = faderInstance.GetComponent<Fader>();
         fader.GetComponent<CanvasGroup>().alpha = 0;

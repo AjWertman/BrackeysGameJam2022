@@ -12,12 +12,11 @@ public class UICanvas : MonoBehaviour
 
     public event Action onControlsClose;
 
-    private void Start()
+    private void Awake()
     {
         DeactivateActivationText();
 
         controlsButton.onClick.AddListener(() => DeactivateControls());
-        controlsPage.SetActive(true);
     }
 
     public void ActivateActivationText(string activationString)
