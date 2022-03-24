@@ -12,6 +12,7 @@ public class WhaleManager : MonoBehaviour
 
     WhaleSpawner[] whaleSpawners = null;
     List<Whale> whalePool = new List<Whale>();
+    List<Whale> activeWhales = new List<Whale>();
 
     bool isActive = false;
     bool canHandleSpawner = false;
@@ -50,6 +51,8 @@ public class WhaleManager : MonoBehaviour
 
     private IEnumerator HandleSFX()
     {
+        if (!canMakeSoundFX) yield break;
+
         AudioClip randomClip = null;
         int randomClipIndex = UnityEngine.Random.Range(0, 2);
         if (randomClipIndex == 0)
@@ -84,9 +87,16 @@ public class WhaleManager : MonoBehaviour
         {
             spawner.gameObject.SetActive(false);
         }
+
+        foreach(Whale activeWhale in activeWhales)
+        {
+            activeWhale.gameObject.SetActive(false);
+        }
+
         StopAllCoroutines();
 
         isActive = false;
+        canMakeSoundFX = false;
     }
 
     private IEnumerator HandleSpawners()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -16,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] PlayerPhase currentPhase = PlayerPhase.One;
 
+    [SerializeField] LayerMask layerMask1;
+    [SerializeField] LayerMask layerMask2;
+    [SerializeField] LayerMask layerMask3;
+
     RigidbodyFirstPersonController firstPersonController = null;
     Rigidbody rb = null;
     UICanvas uiCanvas = null;
@@ -29,8 +34,14 @@ public class PlayerController : MonoBehaviour
     Vector3 camStartPos = Vector3.zero;
     Quaternion camStartRot = Quaternion.identity;
 
-    [SerializeField] AudioClip footstepsClip;
-    AudioSource footstepsAudioSource = null;
+    [SerializeField] AudioClip deathSound = null;
+    [SerializeField] AudioClip jumpSound = null;
+
+    [SerializeField] AudioClip[] footstepsClips = null;
+    [SerializeField] float timeBetweenFootsteps = .5f;
+    List<AudioSource> footstepsAudioSources = new List<AudioSource>();
+    int footstepsIndex = 0;
+    bool canPlayFootstepSound = false;
 
     Transform currentCheckpoint = null;
     RaycastableObject currentRaycastableObject = null;
@@ -55,6 +66,7 @@ public class PlayerController : MonoBehaviour
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
 
+        firstPersonController.onJump += () => soundFXManager.CreateSoundFX(jumpSound, transform);
         uiCanvas.onControlsClose += () => SetPlayerPhase(PlayerPhase.One);
     }
 
@@ -87,7 +99,10 @@ public class PlayerController : MonoBehaviour
         else
         { 
             HandleRaycasts();
-            HandleFootsteps();
+
+            if (!canPlayFootstepSound) return;
+
+            StartCoroutine(HandleFootsteps());
         }
     }
 
@@ -162,6 +177,8 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DeathBehavior()
     {
+        soundFXManager.CreateSoundFX(deathSound, transform);
+        
         if (fader != null)
         {
             yield return fader.FadeOut(1, Color.black, null);
@@ -219,6 +236,7 @@ public class PlayerController : MonoBehaviour
         firstPersonController.enabled = shouldActivate;
         rb.useGravity = shouldActivate;
         rb.isKinematic = !shouldActivate;
+        canPlayFootstepSound = shouldActivate;
 
         if (shouldActivate)
         {
@@ -243,6 +261,8 @@ public class PlayerController : MonoBehaviour
             characterController.enabled = false;
             canFly = false;
 
+            mainCam.cullingMask = layerMask1;
+
             //Setup later
             //morningTasksSequence.BeginMorningTasksSequence();
         }
@@ -253,6 +273,8 @@ public class PlayerController : MonoBehaviour
             mainCam.transform.position = birdCamTransform.position;
             mainCam.transform.rotation = birdCamTransform.rotation;
 
+            mainCam.cullingMask = layerMask2;
+
             characterController.enabled = true;
             birdObject.SetActive(true);
             StartFlying();
@@ -262,6 +284,8 @@ public class PlayerController : MonoBehaviour
             birdObject.SetActive(false);
             characterController.enabled = false;
             canFly = false;
+
+            mainCam.cullingMask = layerMask3;
 
             Transform phase3StartTransform = checkpointManager.GetPhase3StartTransform();
             transform.position = phase3StartTransform.position;
@@ -285,18 +309,22 @@ public class PlayerController : MonoBehaviour
 
     private void SetupFootstepsAudioSource()
     {
-        footstepsAudioSource = soundFXManager.AssignNewAudioSource();
+        foreach(AudioClip footstepsSound in footstepsClips)
+        {
+            AudioSource newSource = soundFXManager.AssignNewAudioSource();
+            newSource.Stop();
+            newSource.clip = footstepsSound;
+            newSource.volume = .1f;
+            newSource.transform.parent = transform;
+            newSource.transform.localPosition = Vector3.zero;
 
-        footstepsAudioSource.Stop();
-        footstepsAudioSource.clip = footstepsClip;
-        footstepsAudioSource.volume = .25f;
+            newSource.loop = false;
 
-        footstepsAudioSource.transform.parent = transform;
-        footstepsAudioSource.transform.localPosition = Vector3.zero;
-        footstepsAudioSource.loop = true;
+            footstepsAudioSources.Add(newSource);
+        }
     }
 
-    private void HandleFootsteps()
+    private IEnumerator HandleFootsteps()
     {
         float vaxis = Input.GetAxis("Vertical");
         float haxis = Input.GetAxis("Horizontal");
@@ -305,17 +333,42 @@ public class PlayerController : MonoBehaviour
 
         if (input && rb.velocity.magnitude > 0 && firstPersonController.Grounded)
         {
-            if (footstepsAudioSource.isPlaying) return;
-            //if(!canPlay) return;
-            //wait for seconds x
-            footstepsAudioSource.Play();
-            //can play = true;
+            if (AreAnyFootstepsSourcesPlaying()) yield break;
+            canPlayFootstepSound = false;
+
+            AudioSource activeSource = GetNextFootstepSource();
+            activeSource.Play();
+
+            yield return new WaitForSeconds(timeBetweenFootsteps);
+
+            activeSource.Stop();
+            canPlayFootstepSound = true;
         }
-        else
+    }
+
+    private AudioSource GetNextFootstepSource()
+    {
+        footstepsIndex++;
+
+        if(footstepsIndex == footstepsAudioSources.Count)
         {
-            if (!footstepsAudioSource.isPlaying) return;
-            footstepsAudioSource.Stop();
+            footstepsIndex = 0;
         }
+
+        return footstepsAudioSources[footstepsIndex];
+    }
+
+    private bool AreAnyFootstepsSourcesPlaying()
+    {
+        foreach(AudioSource audioSource in footstepsAudioSources)
+        {
+            if (audioSource.isPlaying)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)
