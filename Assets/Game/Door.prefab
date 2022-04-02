@@ -144,7 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activationText: Open the door
   activationDistance: 3
-  doorSound: {fileID: 8300000, guid: 2400fdea78437134481474e9b3c0add1, type: 3}
+  doorSound: {fileID: 8300000, guid: 77859200becc8a54fa0adc9f84991392, type: 3}
   isTrap: 0
   isLocked: 0
   isEndDoor: 0

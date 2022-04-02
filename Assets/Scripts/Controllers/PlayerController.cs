@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,17 +8,14 @@ public enum PlayerPhase { One, Two, Three }
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] GameObject camObject = null;
-
     [SerializeField] GameObject birdObject = null;
     [SerializeField] Transform birdCamTransform = null;
+    [SerializeField] AudioSource wingFlapSource = null;
     [SerializeField] float flySpeed = 20f;
 
     [SerializeField] PlayerPhase currentPhase = PlayerPhase.One;
 
-    [SerializeField] LayerMask layerMask1;
-    [SerializeField] LayerMask layerMask2;
-    [SerializeField] LayerMask layerMask3;
+    [SerializeField] LayerMask startingMask;
 
     RigidbodyFirstPersonController firstPersonController = null;
     Rigidbody rb = null;
@@ -29,6 +25,7 @@ public class PlayerController : MonoBehaviour
     SoundFXManager soundFXManager = null;
 
     CheckpointManager checkpointManager = null;
+    MorningTasksSequence morningTasksSequence = null;
 
     Camera mainCam = null;
     Vector3 camStartPos = Vector3.zero;
@@ -36,12 +33,14 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] AudioClip deathSound = null;
     [SerializeField] AudioClip jumpSound = null;
+    [SerializeField] AudioClip landSound = null;
 
     [SerializeField] AudioClip[] footstepsClips = null;
     [SerializeField] float timeBetweenFootsteps = .5f;
     List<AudioSource> footstepsAudioSources = new List<AudioSource>();
     int footstepsIndex = 0;
     bool canPlayFootstepSound = false;
+    bool hasBegunLandSound = false;
 
     Transform currentCheckpoint = null;
     RaycastableObject currentRaycastableObject = null;
@@ -54,7 +53,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        mainCam = camObject.GetComponent<Camera>();
+        mainCam = Camera.main;
+
         firstPersonController = GetComponent<RigidbodyFirstPersonController>();
         characterController = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
@@ -65,8 +65,11 @@ public class PlayerController : MonoBehaviour
         musicPlayer = FindObjectOfType<MusicPlayer>();
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
+        morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
 
-        firstPersonController.onJump += () => soundFXManager.CreateSoundFX(jumpSound, transform);
+        firstPersonController.onJump += () => CreateJumpSound();
+        firstPersonController.onJump += () => StartCoroutine(BeginJumpSound());
+
         uiCanvas.onControlsClose += () => SetPlayerPhase(PlayerPhase.One);
     }
 
@@ -74,7 +77,10 @@ public class PlayerController : MonoBehaviour
     {
         camStartPos = mainCam.transform.localPosition;
         camStartRot = mainCam.transform.localRotation;
+
         SetupFootstepsAudioSource();
+
+        mainCam.cullingMask = startingMask;
 
         StartCoroutine(StartGame());
     }
@@ -103,6 +109,15 @@ public class PlayerController : MonoBehaviour
             if (!canPlayFootstepSound) return;
 
             StartCoroutine(HandleFootsteps());
+        }
+
+        if (hasBegunLandSound)
+        {
+            if (firstPersonController.IsGrounded())
+            {
+                hasBegunLandSound = false;
+                CreateLandSound();
+            }
         }
     }
 
@@ -155,6 +170,7 @@ public class PlayerController : MonoBehaviour
     public void StartFlying()
     {
         canFly = true;
+        wingFlapSource.enabled = true;
         Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
         transform.LookAt(lookPosition);
     }
@@ -177,12 +193,14 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DeathBehavior()
     {
-        soundFXManager.CreateSoundFX(deathSound, transform);
-        
+        soundFXManager.CreateSoundFX(deathSound, transform, 1);
+
         if (fader != null)
         {
             yield return fader.FadeOut(1, Color.black, null);
         }
+
+        checkpointManager.ResetToLastCheckpoint(currentPhase); 
         
         if (currentPhase != PlayerPhase.Two)
         {
@@ -204,7 +222,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
+            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
             transform.LookAt(lookPosition);
             characterController.enabled = true;
         }
@@ -260,20 +278,16 @@ public class PlayerController : MonoBehaviour
             ActivateFirstPersonController(true);
             characterController.enabled = false;
             canFly = false;
-
-            mainCam.cullingMask = layerMask1;
-
-            //Setup later
-            //morningTasksSequence.BeginMorningTasksSequence();
+            morningTasksSequence.BeginMorningTasksSequence();
         }
         else if (currentPhase == PlayerPhase.Two)
         {
             ActivateFirstPersonController(false);
 
+            currentCheckpoint = checkpointManager.GetPhase2Checkpoint();
+
             mainCam.transform.position = birdCamTransform.position;
             mainCam.transform.rotation = birdCamTransform.rotation;
-
-            mainCam.cullingMask = layerMask2;
 
             characterController.enabled = true;
             birdObject.SetActive(true);
@@ -284,8 +298,6 @@ public class PlayerController : MonoBehaviour
             birdObject.SetActive(false);
             characterController.enabled = false;
             canFly = false;
-
-            mainCam.cullingMask = layerMask3;
 
             Transform phase3StartTransform = checkpointManager.GetPhase3StartTransform();
             transform.position = phase3StartTransform.position;
@@ -309,9 +321,12 @@ public class PlayerController : MonoBehaviour
 
     private void SetupFootstepsAudioSource()
     {
+        canPlayFootstepSound = false;
+
         foreach(AudioClip footstepsSound in footstepsClips)
         {
             AudioSource newSource = soundFXManager.AssignNewAudioSource();
+            newSource.playOnAwake = false;
             newSource.Stop();
             newSource.clip = footstepsSound;
             newSource.volume = .1f;
@@ -371,6 +386,22 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    private void CreateJumpSound()
+    {
+        soundFXManager.CreateSoundFX(jumpSound, transform, .5f);
+    }
+
+    private IEnumerator BeginJumpSound()
+    {
+        yield return new WaitForSeconds(.2f);
+        hasBegunLandSound = true;
+    }
+
+    private void CreateLandSound()
+    {
+        soundFXManager.CreateSoundFX(landSound, transform, .5f);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(currentPhase == PlayerPhase.Two)
@@ -378,9 +409,8 @@ public class PlayerController : MonoBehaviour
             LightSpeedSequence lightSpeedSequence = other.GetComponent<LightSpeedSequence>();
 
             if (lightSpeedSequence != null)
-            { 
-                //light speed stuff
-                SetPlayerPhase(PlayerPhase.Three);
+            {
+                StartCoroutine(lightSpeedSequence.ActivateLightSpeedSequence(this));
                 return;
             }
 

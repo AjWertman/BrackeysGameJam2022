@@ -65,7 +65,7 @@ public class WhaleManager : MonoBehaviour
         }
 
         float randomTimeBetweenSfx = UnityEngine.Random.Range(2, 5);
-        sfxManager.CreateSoundFX(randomClip, null);
+        sfxManager.CreateSoundFX(randomClip, null, 1);
         yield return new WaitForSeconds(randomTimeBetweenSfx);
         canMakeSoundFX = true;
     }

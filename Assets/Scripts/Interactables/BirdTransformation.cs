@@ -10,6 +10,7 @@ public class BirdTransformation : MonoBehaviour
     WhaleManager whaleManager = null;
     Door doorParent = null;
     PlayerController player = null;
+    MusicPlayer musicPlayer = null;
 
     bool hasBegunTransformation = false;
 
@@ -18,6 +19,7 @@ public class BirdTransformation : MonoBehaviour
         doorParent = GetComponent<Door>();
         player = FindObjectOfType<PlayerController>();
         whaleManager = FindObjectOfType<WhaleManager>();
+        musicPlayer = FindObjectOfType<MusicPlayer>();
         doorParent.onOpen += () => StartCoroutine(BeginBirdTransformation());
     }
 
@@ -25,6 +27,8 @@ public class BirdTransformation : MonoBehaviour
     {
         if (hasBegunTransformation) yield break;
         hasBegunTransformation = true;
+
+        musicPlayer.Pause();
 
         oobToTurnOff.gameObject.SetActive(false);
         floorToOpen.gameObject.SetActive(false);

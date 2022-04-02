@@ -42,6 +42,11 @@ public class MusicPlayer : MonoBehaviour
 
         return songToGet;
     }
+
+    public void Pause()
+    {
+        audioSource.Pause();
+    }
 }
 
 [Serializable]

@@ -2,19 +2,29 @@ using UnityEngine;
 
 public class AlarmClock : MonoBehaviour
 {
+    [SerializeField] AudioClip alarmClockSound = null;
+
     AudioSource audioSource = null;
-    //SoundFXManager fXManager = null;
+    SoundFXManager fXManager = null;
     MorningTask morningTask = null;
 
     private void Awake()
     {
         morningTask = GetComponent<MorningTask>();
         morningTask.onTaskComplete += TurnOff;
+
+        fXManager = FindObjectOfType<SoundFXManager>();
+    }
+
+    private void Start()
+    {
+        audioSource = fXManager.AssignNewAudioSource();
+        audioSource.clip = alarmClockSound;
+        BeginAlarmClock();
     }
 
     public void BeginAlarmClock()
     {
-        audioSource = GetComponent<AudioSource>();
         audioSource.loop = true;
 
         audioSource.transform.parent = transform;

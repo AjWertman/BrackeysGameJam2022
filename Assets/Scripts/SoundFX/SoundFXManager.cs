@@ -14,14 +14,25 @@ public class SoundFXManager : MonoBehaviour
         CreateSoundFXObjects();
     }
 
-    public void CreateSoundFX(AudioClip clip, Transform clipLocation)
+    private void CreateSoundFXObjects()
     {
-        StartCoroutine(CreateSoundFXCoroutine(clip, clipLocation));
+        for (int i = 0; i < amountOfObjectsToPool; i++)
+        {
+            GameObject newSourceInstance = Instantiate(soundFXSourcePrefab, transform);
+            AudioSource audioSource = newSourceInstance.GetComponent<AudioSource>();
+
+            soundFXSourceInstances.Add(audioSource, false);
+        }
     }
 
-    public IEnumerator CreateSoundFXCoroutine(AudioClip clip, Transform clipLocation)
+    public void CreateSoundFX(AudioClip clip, Transform clipLocation, float volume)
     {
-        if (clipLocation == null)
+        StartCoroutine(CreateSoundFXCoroutine(clip, clipLocation,volume));
+    }
+
+    private IEnumerator CreateSoundFXCoroutine(AudioClip clip, Transform clipLocation, float volume)
+    {     
+        if(clipLocation == null)
         {
             clipLocation = Camera.main.transform;
         }
@@ -32,6 +43,7 @@ public class SoundFXManager : MonoBehaviour
         float clipLength = clip.length;
 
         availableAudioSource.clip = clip;
+        availableAudioSource.volume = volume;
 
         availableAudioSource.transform.parent = clipLocation;
         availableAudioSource.transform.localPosition = Vector3.zero;
@@ -44,17 +56,6 @@ public class SoundFXManager : MonoBehaviour
         availableAudioSource.clip = null;
         availableAudioSource.transform.parent = transform;
         availableAudioSource.transform.localPosition = Vector3.zero;
-    }
-
-    private void CreateSoundFXObjects()
-    {
-        for (int i = 0; i < amountOfObjectsToPool; i++)
-        {
-            GameObject newSourceInstance = Instantiate(soundFXSourcePrefab, transform);
-            AudioSource audioSource = newSourceInstance.GetComponent<AudioSource>();
-
-            soundFXSourceInstances.Add(audioSource, false);
-        }
     }
 
     public AudioSource AssignNewAudioSource()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +10,9 @@ public class MorningTasksSequence : MonoBehaviour
     MorningTask currentTask = null;
 
     int maxTasks = 0;
+    bool isActive = false;
 
-    private void Start()
+    private void Awake()
     {
         maxTasks = morningTasks.Count;
         foreach (MorningTask morningTask in morningTasks)

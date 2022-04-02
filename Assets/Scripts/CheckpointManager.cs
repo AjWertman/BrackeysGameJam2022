@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class CheckpointManager : MonoBehaviour
 {
+    [SerializeField] Transform phase2Checkpoint = null;
+
     [Header("Phase Three")]
     [SerializeField] EnemyController enemy = null;
     [SerializeField] Door doorsToClosePhase3 = null;
     [SerializeField] Transform playerStartTransform3 = null;
     [SerializeField] Transform checkpointPhase3 = null;
+
+    public Transform GetPhase2Checkpoint()
+    {
+        return phase2Checkpoint;
+    }
 
     public void ResetToLastCheckpoint(PlayerPhase phase)
     {

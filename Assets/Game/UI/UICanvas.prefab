@@ -355,7 +355,6 @@ GameObject:
   - component: {fileID: 1636783001075597180}
   - component: {fileID: 1825904672759192715}
   - component: {fileID: 1750991480716100474}
-  - component: {fileID: 5299737481478639338}
   m_Layer: 0
   m_Name: ControlsPage
   m_TagString: Untagged
@@ -452,18 +451,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &5299737481478639338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2693256407227947775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dde0acafd64e2742b71ed6a90e3eb29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3834185055874318832
 GameObject:
   m_ObjectHideFlags: 0

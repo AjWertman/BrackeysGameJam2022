@@ -32,7 +32,7 @@ public class EndDoor : MonoBehaviour
     private IEnumerator EndGame()
     {
         enemy.SetIsActivated(false);
-        soundFXManager.CreateSoundFX(alarmClock, null);
+        soundFXManager.CreateSoundFX(alarmClock, null, .75f);
         yield return fader.FadeOut(2, Color.white, "The End!");
         yield return new WaitForSeconds(2f);
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MorningTask : RaycastableObject
 {
-    //[SerializeField] Texture2D objectTexture = null;
+    [SerializeField] Texture2D objectTexture = null;
     [SerializeField] Material baseGlowMaterial = null;
     [SerializeField] string activeActivationText = null;
 
@@ -24,6 +24,8 @@ public class MorningTask : RaycastableObject
 
         material = new Material(baseGlowMaterial);
 
+        material.SetTexture("_Texture", objectTexture);
+
         foreach (MeshRenderer meshRenderer in meshRenderers)
         {
             meshRenderer.material = material;
@@ -38,16 +40,17 @@ public class MorningTask : RaycastableObject
 
     public void HighlightTask(bool shouldActivate)
     {
-        float fresnelPower = 1000;
+        float boolIsActiveFloat = 0f;
+
         int layer = 0;
 
         if (shouldActivate)
         {
-            fresnelPower = 2;
+            boolIsActiveFloat = 1f;
             layer = 6;
         }
 
-        material.SetFloat(fresnelPowerVariable, fresnelPower);
+        material.SetFloat("_isActive", boolIsActiveFloat);
         gameObject.layer = layer;
         foreach(Transform child in transform)
         {
