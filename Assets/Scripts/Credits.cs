@@ -11,6 +11,7 @@ public class Credits : MonoBehaviour
     [SerializeField] Button mainMenuButton = null;
     [SerializeField] Button quitButton = null;
 
+    Fader fader = null;
     ScrollRect scrollRect = null;
 
     bool hasStarted = false;
@@ -21,6 +22,7 @@ public class Credits : MonoBehaviour
 
     private void Awake()
     {
+        fader = FindObjectOfType<Fader>();
         scrollRect = GetComponentInChildren<ScrollRect>();
         mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene(0));
         quitButton.onClick.AddListener(() => Application.Quit());
@@ -30,9 +32,8 @@ public class Credits : MonoBehaviour
     }
 
     private void Start()
-    {
-        scrollingDownCoroutine = ScrollingDownBehavior();
-        StartCoroutine(scrollingDownCoroutine);
+    {       
+        StartCoroutine(BeginCreditsScrolling());
     }
 
     private void Update()
@@ -52,8 +53,17 @@ public class Credits : MonoBehaviour
 
     private IEnumerator BeginCreditsScrolling()
     {
+        scrollingDownCoroutine = ScrollingDownBehavior();
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        //switch music
+
+        yield return fader.FadeIn(1);
+
+        yield return new WaitForSeconds(1f);
         yield return new WaitForSeconds(pauseTime);
-        yield return ScrollingDownBehavior();
+        yield return scrollingDownCoroutine;
     }
 
     public IEnumerator ScrollingDownBehavior()
@@ -75,6 +85,7 @@ public class Credits : MonoBehaviour
     private IEnumerator BackToTheTop()
     {
         StopCoroutine(scrollingDownCoroutine);
+        yield return new WaitForSeconds(pauseTime);
         yield return ScrollingUpBehavior();
         isDone = true;
     }

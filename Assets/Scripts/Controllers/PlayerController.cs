@@ -432,6 +432,14 @@ public class PlayerController : MonoBehaviour
         if (hitWhale != null || oob != null)
         {
             StartCoroutine(Die());
-        }              
+            return;
+        }
+
+        EndDoor endDoor = other.GetComponent<EndDoor>();
+
+        if (endDoor != null)
+        {
+            StartCoroutine(endDoor.EndGame());
+        }
     }
 }

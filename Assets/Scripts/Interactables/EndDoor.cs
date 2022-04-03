@@ -6,22 +6,19 @@ using UnityEngine.UI;
 
 public class EndDoor : MonoBehaviour
 {
-    [SerializeField] GameObject endScreen = null;
-    [SerializeField] Button mainMenuButton = null;
-    [SerializeField] Button quitGameButton = null;
     [SerializeField] AudioClip alarmClock = null;
 
+    SlowMotionSequence slowMotionSequence = null;
     SoundFXManager soundFXManager = null;
     EnemyController enemy;
     Door myDoor = null;
     Fader fader = null;
 
+    bool isEnding = false;
+
     private void Awake()
     {
-        mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene(0));
-        quitGameButton.onClick.AddListener(() => Application.Quit());
-        endScreen.SetActive(false);
-
+        slowMotionSequence = FindObjectOfType<SlowMotionSequence>();
         enemy = FindObjectOfType<EnemyController>();
         myDoor = GetComponent<Door>();
         fader = FindObjectOfType<Fader>();
@@ -29,16 +26,19 @@ public class EndDoor : MonoBehaviour
         myDoor.onOpen += ()=> StartCoroutine(EndGame());
     }
 
-    private IEnumerator EndGame()
+    public IEnumerator EndGame()
     {
+        if (isEnding) yield break;
+        slowMotionSequence.enabled = false;
+        isEnding = true;
+        Time.timeScale = 1;
+
         enemy.SetIsActivated(false);
         soundFXManager.CreateSoundFX(alarmClock, null, .75f);
-        yield return fader.FadeOut(2, Color.white, "The End!");
-        yield return new WaitForSeconds(2f);
 
-        fader.GetComponent<CanvasGroup>().alpha = 0;
-        endScreen.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        yield return fader.FadeOut(2, Color.white, "The End!");
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.LoadScene(2);
     }
 }

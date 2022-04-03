@@ -13,8 +13,8 @@ public class Door : RaycastableObject
     Animator animator = null;
     SoundFXManager soundFXManager = null;
 
-    //add to sound manager
     public event Action onOpen;
+    bool isOpen = false;
 
     protected override void Awake()
     {
@@ -25,6 +25,12 @@ public class Door : RaycastableObject
 
     public void Update()
     {
+        if (isOpen)
+        {
+            activationText = "";
+            return;
+        }
+
         if (isLocked && activationText != "Door is locked")
         {
             activationText = "Door is locked";
@@ -42,6 +48,8 @@ public class Door : RaycastableObject
 
     public void OpenDoor()
     {
+        if (isOpen) return;
+        isOpen = true;
         if (isLocked == true) return;
 
         if (isTrap || isEndDoor)
