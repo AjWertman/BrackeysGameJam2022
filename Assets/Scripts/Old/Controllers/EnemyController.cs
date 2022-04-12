@@ -56,7 +56,6 @@ public class EnemyController : MonoBehaviour
 
     public void ResetEnemy()
     {
-        print("reseting enemy"); 
         isActivated = false;
         navMeshAgent.enabled = false;
         transform.position = startPosition;

@@ -32,9 +32,9 @@ public class MusicPlayer : MonoBehaviour
     {
         Song songToGet = null;
 
-        foreach(Song song in playlist)
+        foreach (Song song in playlist)
         {
-            if(song.GetPhase() == phase)
+            if (song.GetPhase() == phase)
             {
                 songToGet = song;
             }
@@ -45,7 +45,10 @@ public class MusicPlayer : MonoBehaviour
 
     public void Pause()
     {
-        audioSource.Pause();
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
     }
 }
 

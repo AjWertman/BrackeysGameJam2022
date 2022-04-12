@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isDead = false;
     bool canFly = false;
 
+    bool isTransitioningCam = false;
+
     private void Awake()
     {
         mainCam = Camera.main;
@@ -119,6 +121,19 @@ public class PlayerController : MonoBehaviour
                 CreateLandSound();
             }
         }
+
+        if (isTransitioningCam)
+        {
+            mainCam.transform.position = Vector3.MoveTowards(mainCam.transform.position, birdCamTransform.position, 10 * Time.deltaTime);
+            //mainCam.transform.rotation = Quaternion.RotateTowards(mainCam.transform.rotation, birdCamTransform.localRotation, 400 * Time.deltaTime);
+
+            mainCam.transform.eulerAngles = Vector3.MoveTowards(mainCam.transform.eulerAngles, birdCamTransform.eulerAngles, 400 * Time.deltaTime);
+
+            if (mainCam.transform.position == birdCamTransform.position && mainCam.transform.eulerAngles == birdCamTransform.eulerAngles)
+            {
+                isTransitioningCam = false;
+            }
+        }
     }
 
     private IEnumerator StartGame()
@@ -171,7 +186,7 @@ public class PlayerController : MonoBehaviour
     {
         canFly = true;
         wingFlapSource.enabled = true;
-        Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
+        Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
         transform.LookAt(lookPosition);
     }
 
@@ -197,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
         if (fader != null)
         {
-            yield return fader.FadeOut(1, Color.black, null);
+            yield return fader.FadeOut(.5f, Color.black, null);
         }
 
         checkpointManager.ResetToLastCheckpoint(currentPhase); 
@@ -212,17 +227,18 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.position = currentCheckpoint.position;
-        mainCam.transform.localEulerAngles = Vector3.zero;
+       
 
         yield return new WaitForSeconds(1);
 
         if (currentPhase != PlayerPhase.Two)
         {
+            mainCam.transform.localEulerAngles = Vector3.zero;
             ActivateFirstPersonController(true);
         }
         else
         {
-            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
+            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
             transform.LookAt(lookPosition);
             characterController.enabled = true;
         }
@@ -286,8 +302,7 @@ public class PlayerController : MonoBehaviour
 
             currentCheckpoint = checkpointManager.GetPhase2Checkpoint();
 
-            mainCam.transform.position = birdCamTransform.position;
-            mainCam.transform.rotation = birdCamTransform.rotation;
+            isTransitioningCam = true;          
 
             characterController.enabled = true;
             birdObject.SetActive(true);
@@ -404,7 +419,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(currentPhase == PlayerPhase.Two)
+        if(currentPhase == PlayerPhase.One)
+        {
+            BirdTransformation birdTransformation = other.GetComponent<BirdTransformation>();
+
+            if(birdTransformation != null)
+            {
+                rb.isKinematic = true;
+                StartCoroutine(birdTransformation.BeginBirdTransformation());
+            }
+        }
+        else if(currentPhase == PlayerPhase.Two)
         {
             LightSpeedSequence lightSpeedSequence = other.GetComponent<LightSpeedSequence>();
 

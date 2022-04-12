@@ -41,18 +41,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7004352090591039227}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40cb636708636d543b6f07deadd6f05f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c309266c94b39c438c997776af6e417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playlist:
   - phase: 0
-    songClip: {fileID: 8300000, guid: fc2d2127a6fd91a42be5746c38b91ce5, type: 3}
+    songClip: {fileID: 8300000, guid: 5044502640793824dbe5d3db7fbc7e26, type: 3}
     volume: 0.1
   - phase: 1
-    songClip: {fileID: 8300000, guid: 6df9dd6afbbd3fe408a510631c6484ce, type: 3}
+    songClip: {fileID: 8300000, guid: 48aa6c2289623224a854d2747333fd96, type: 3}
     volume: 0.1
   - phase: 2
-    songClip: {fileID: 8300000, guid: 51fc729ed19585743accde7f5c28599c, type: 3}
+    songClip: {fileID: 8300000, guid: d754f7dc9d4c7ea44b63e0049a554ede, type: 3}
     volume: 0.3
 --- !u!82 &7004352090591039226
 AudioSource:
@@ -72,7 +72,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 129
+  Priority: 169
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

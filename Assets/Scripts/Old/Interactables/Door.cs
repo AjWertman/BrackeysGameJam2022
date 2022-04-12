@@ -49,7 +49,6 @@ public class Door : RaycastableObject
     public void OpenDoor()
     {
         if (isOpen) return;
-        isOpen = true;
         if (isLocked == true) return;
 
         if (isTrap || isEndDoor)
@@ -58,6 +57,7 @@ public class Door : RaycastableObject
         }
         else
         {
+            isOpen = true;
             animator.SetTrigger("open");
             soundFXManager.CreateSoundFX(doorSound, transform, .1f);
         }
