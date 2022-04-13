@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -8,27 +7,21 @@ public enum PlayerPhase { One, Two, Three }
 
 public class PlayerController : MonoBehaviour
 {
-    HumanSoundMaker humanSoundMaker = null;
+    [SerializeField] AudioClip deathSound = null;
 
-    [SerializeField] GameObject birdObject = null;
-    [SerializeField] Transform birdCamTransform = null;
-    [SerializeField] AudioSource wingFlapSource = null;
-    [SerializeField] float flySpeed = 20f;
-    [SerializeField] float pitchFactor = -2f;
-    [SerializeField] float yawFactor = -20f;
-    [SerializeField] float rollFactor = -3f;
-
-    [SerializeField] PlayerPhase currentPhase = PlayerPhase.One;
-
+    [SerializeField] BirdTrigger birdTrigger = null;
     [SerializeField] LayerMask startingMask;
+
+    PlayerPhase currentPhase = PlayerPhase.One;
 
     RigidbodyFirstPersonController firstPersonController = null;
     Rigidbody rb = null;
+    BirdController birdController = null;
     UICanvas uiCanvas = null;
     Fader fader = null;
-    MusicPlayer musicPlayer = null; 
+    MusicPlayer musicPlayer = null;
     SoundFXManager soundFXManager = null;
-
+    HumanSoundMaker humanSoundMaker = null;
     CheckpointManager checkpointManager = null;
     MorningTasksSequence morningTasksSequence = null;
 
@@ -36,27 +29,20 @@ public class PlayerController : MonoBehaviour
     Vector3 camStartPos = Vector3.zero;
     Quaternion camStartRot = Quaternion.identity;
 
-    [SerializeField] AudioClip deathSound = null;
-
     Transform currentCheckpoint = null;
     RaycastableObject currentRaycastableObject = null;
 
-    CharacterController characterController = null;
-    Vector3 moveDirection = Vector3.zero;
-
-    [SerializeField] bool isDead = false;
-    bool canFly = false;
-
-    bool isTransitioningCam = false;
+    bool isDead = false;
 
     private void Awake()
     {
         mainCam = Camera.main;
 
         humanSoundMaker = GetComponent<HumanSoundMaker>();
+        birdController = GetComponent<BirdController>();
+        birdTrigger.onDeath += () => StartCoroutine(DeathBehavior());
 
         firstPersonController = GetComponent<RigidbodyFirstPersonController>();
-        characterController = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
 
         uiCanvas = FindObjectOfType<UICanvas>();
@@ -66,7 +52,6 @@ public class PlayerController : MonoBehaviour
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
         morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
-
 
         uiCanvas.onControlsClose += () => SetPlayerPhase(PlayerPhase.One);
     }
@@ -93,28 +78,11 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        if (currentPhase == PlayerPhase.Two)
-        {
-            if (!canFly) return;
-            FlyForward();
-        }
-        else
+        if(currentPhase != PlayerPhase.Two)
         { 
             HandleRaycasts();
         }
 
-        if (isTransitioningCam)
-        {
-            mainCam.transform.position = Vector3.MoveTowards(mainCam.transform.position, birdCamTransform.position, 10 * Time.deltaTime);
-            //mainCam.transform.rotation = Quaternion.RotateTowards(mainCam.transform.rotation, birdCamTransform.localRotation, 400 * Time.deltaTime);
-
-            mainCam.transform.eulerAngles = Vector3.MoveTowards(mainCam.transform.eulerAngles, birdCamTransform.eulerAngles, 400 * Time.deltaTime);
-
-            if (mainCam.transform.position == birdCamTransform.position && mainCam.transform.eulerAngles == birdCamTransform.eulerAngles)
-            {
-                isTransitioningCam = false;
-            }
-        }
     }
 
     private IEnumerator StartGame()
@@ -163,34 +131,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void StartFlying()
-    {
-        canFly = true;
-        wingFlapSource.enabled = true;
-        Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
-        transform.LookAt(lookPosition);
-    }
 
-    private void FlyForward()
-    {
-        if (characterController.enabled == false) return;
-
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        moveDirection = new Vector3(horizontalInput, verticalInput , 1).normalized;
-        characterController.Move(moveDirection * flySpeed * Time.deltaTime);
-
-        float pitchDirection = moveDirection.y * pitchFactor;
-        float yawDirection = moveDirection.x * yawFactor;
-        float rollDirection = moveDirection.x * rollFactor;
-
-        float pitch =  pitchDirection;
-        float yaw = yawDirection;
-        float roll = rollDirection;
-
-        birdObject.transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
-    }
 
     public IEnumerator Die()
     {
@@ -202,40 +143,28 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator DeathBehavior()
-    {
-        soundFXManager.CreateSoundFX(deathSound, transform, 1);
-
+    {       
         if (fader != null)
         {
             yield return fader.FadeOut(.5f, Color.black, null);
         }
 
-        checkpointManager.ResetToLastCheckpoint(currentPhase); 
-        
         if (currentPhase != PlayerPhase.Two)
         {
+            soundFXManager.CreateSoundFX(deathSound, transform, 1);
+            checkpointManager.ResetToLastCheckpoint(currentPhase);
+
             ActivateFirstPersonController(false);
-        }
-        else
-        {
-            characterController.enabled = false;
-        }
 
-        transform.position = currentCheckpoint.position;
-       
+            transform.position = currentCheckpoint.position;
 
-        yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1f);
 
-        if (currentPhase != PlayerPhase.Two)
-        {
-            mainCam.transform.localEulerAngles = Vector3.zero;
             ActivateFirstPersonController(true);
         }
         else
         {
-            Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
-            transform.LookAt(lookPosition);
-            characterController.enabled = true;
+            StartCoroutine(birdController.BirdDeath(currentCheckpoint.position));
         }
 
         isDead = false;
@@ -243,7 +172,7 @@ public class PlayerController : MonoBehaviour
         if (fader != null)
         {
             yield return fader.FadeIn(1);
-        }          
+        }
     }
 
     private static void ActivateCursor(bool shouldActivate)
@@ -285,10 +214,8 @@ public class PlayerController : MonoBehaviour
     {
         if (currentPhase == PlayerPhase.One)
         {
-            birdObject.SetActive(false);
+            birdController.Deactivate();
             ActivateFirstPersonController(true);
-            characterController.enabled = false;
-            canFly = false;
             morningTasksSequence.BeginMorningTasksSequence();
         }
         else if (currentPhase == PlayerPhase.Two)
@@ -297,17 +224,11 @@ public class PlayerController : MonoBehaviour
 
             currentCheckpoint = checkpointManager.GetPhase2Checkpoint();
 
-            isTransitioningCam = true;          
-
-            characterController.enabled = true;
-            birdObject.SetActive(true);
-            StartFlying();
+            birdController.Activate();
         }
         else if (currentPhase == PlayerPhase.Three)
         {
-            birdObject.SetActive(false);
-            characterController.enabled = false;
-            canFly = false;
+            birdController.Deactivate();
 
             Transform phase3StartTransform = checkpointManager.GetPhase3StartTransform();
             transform.position = phase3StartTransform.position;
@@ -370,10 +291,9 @@ public class PlayerController : MonoBehaviour
             humanSoundMaker.SetNewSounds(humanSoundsTrigger.GetHumanSounds());
         }
 
-        Whale hitWhale = other.GetComponentInParent<Whale>();
         OutOfBounds oob = other.GetComponent<OutOfBounds>();
 
-        if (hitWhale != null || oob != null)
+        if (oob != null)
         {
             StartCoroutine(Die());
             return;

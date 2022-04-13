@@ -3,6 +3,7 @@ using UnityEngine;
 public class AlarmClock : MonoBehaviour
 {
     [SerializeField] AudioClip alarmClockSound = null;
+    [SerializeField] AudioClip turnOffSound = null;
 
     AudioSource audioSource = null;
     SoundFXManager fXManager = null;
@@ -36,5 +37,6 @@ public class AlarmClock : MonoBehaviour
     public void TurnOff()
     {
         audioSource.Stop();
+        fXManager.CreateSoundFX(turnOffSound, transform, .75f);
     }
 }

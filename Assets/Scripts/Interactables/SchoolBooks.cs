@@ -1,14 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SchoolBooks : MonoBehaviour
 {
     [SerializeField] GameObject[] objectsToTurnOff = null;
+    [SerializeField] AudioClip pickupClip = null;
+
+    SoundFXManager soundFXManager = null;
 
     private void Awake()
     {
         GetComponent<MorningTask>().onTaskComplete += GrabSchoolBooks;
+
+        soundFXManager = FindObjectOfType<SoundFXManager>();
     }
 
     private void GrabSchoolBooks()
@@ -18,6 +21,6 @@ public class SchoolBooks : MonoBehaviour
             book.SetActive(false);
         }
 
-        //Play sound??
+        soundFXManager.CreateSoundFX(pickupClip, transform, .75f);
     }
 }
