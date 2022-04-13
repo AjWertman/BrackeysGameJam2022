@@ -21,7 +21,6 @@ public class WhaleManager : MonoBehaviour
     SoundFXManager sfxManager = null;
 
     [SerializeField] AudioClip whaleSound0;
-    [SerializeField] AudioClip whaleSound1;
 
     private void Awake()
     {
@@ -53,19 +52,8 @@ public class WhaleManager : MonoBehaviour
     {
         if (!canMakeSoundFX) yield break;
 
-        AudioClip randomClip = null;
-        int randomClipIndex = UnityEngine.Random.Range(0, 2);
-        if (randomClipIndex == 0)
-        {
-            randomClip = whaleSound0;
-        }
-        else
-        {
-            randomClip = whaleSound1;
-        }
-
         float randomTimeBetweenSfx = UnityEngine.Random.Range(2, 5);
-        sfxManager.CreateSoundFX(randomClip, null, 1);
+        sfxManager.CreateSoundFX(whaleSound0, null, 1);
         yield return new WaitForSeconds(randomTimeBetweenSfx);
         canMakeSoundFX = true;
     }
