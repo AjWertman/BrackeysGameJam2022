@@ -87,13 +87,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4074153657334881483}
-  m_LocalRotation: {x: -0.00000001233767, y: 0.00000017604488, z: -0.12158979, w: 0.9925805}
-  m_LocalPosition: {x: -0.00036801468, y: 0.0025167912, z: 0}
+  m_LocalRotation: {x: 0.000000053019008, y: 0.00000018793989, z: -0.06968405, w: 0.9975692}
+  m_LocalPosition: {x: -0.0008, y: -0.00157, z: 0}
   m_LocalScale: {x: 0.0033758178, y: 0.007858927, z: 0.006550705}
   m_Children: []
   m_Father: {fileID: 9153795569446065100}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -7.992}
 --- !u!33 &1792582110511643581
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -153,8 +153,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.28
-  m_Height: 2
+  m_Radius: 0.18
+  m_Height: 2.05
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6209683530335743293
@@ -183,13 +183,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6209683530335743293}
-  m_LocalRotation: {x: -0.000000047319062, y: 0.00000012340776, z: 0.023198565, w: 0.9997309}
-  m_LocalPosition: {x: 0.00008587102, y: -0.0018490759, z: 0}
+  m_LocalRotation: {x: -0.000000109129815, y: 0.0000000035741392, z: -0.0505913, w: 0.99871945}
+  m_LocalPosition: {x: -0.00108, y: -0.00638, z: 0}
   m_LocalScale: {x: 0.005414301, y: 0.008088645, z: 0.010506342}
   m_Children: []
   m_Father: {fileID: 6738841478292639225}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -5.8}
 --- !u!33 &2160823064124618535
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -249,8 +249,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.28
-  m_Height: 2
+  m_Radius: 0.35
+  m_Height: 2.29
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6713774098746640058
@@ -345,7 +345,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.29
+  m_Radius: 0.31
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

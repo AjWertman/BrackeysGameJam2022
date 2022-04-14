@@ -10,9 +10,11 @@ public class Credits : MonoBehaviour
 
     [SerializeField] Button mainMenuButton = null;
     [SerializeField] Button quitButton = null;
+    [SerializeField] AudioClip uiSound = null;
 
     Fader fader = null;
     ScrollRect scrollRect = null;
+    SoundFXManager soundFXManager = null;
 
     bool hasStarted = false;
     bool areButtonsActive = false;
@@ -24,8 +26,12 @@ public class Credits : MonoBehaviour
     {
         fader = FindObjectOfType<Fader>();
         scrollRect = GetComponentInChildren<ScrollRect>();
+        soundFXManager = FindObjectOfType<SoundFXManager>();
         mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene(0));
         quitButton.onClick.AddListener(() => Application.Quit());
+
+        mainMenuButton.onClick.AddListener(() => soundFXManager.CreateSoundFX(uiSound, transform, 1));
+        quitButton.onClick.AddListener(() => soundFXManager.CreateSoundFX(uiSound, transform, 1));
 
         mainMenuButton.interactable = false;
         quitButton.interactable = false;

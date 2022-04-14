@@ -12,6 +12,8 @@ public class BirdTransformation : MonoBehaviour
     [SerializeField] GameObject floorToOpen = null;
     [SerializeField] GameObject[] particles = null;
 
+    [SerializeField] GameObject reticle = null;
+
     SoundFXManager fXManager = null;
     WhaleManager whaleManager = null;
     PlayerController player = null;
@@ -52,6 +54,7 @@ public class BirdTransformation : MonoBehaviour
         player.SetPlayerPhase(PlayerPhase.Two);
 
         whaleManager.ActivateWhalePhase();
+        reticle.SetActive(false);
         gameObject.SetActive(false);
     }
 }

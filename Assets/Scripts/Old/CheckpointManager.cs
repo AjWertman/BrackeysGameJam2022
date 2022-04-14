@@ -10,6 +10,13 @@ public class CheckpointManager : MonoBehaviour
     [SerializeField] Transform playerStartTransform3 = null;
     [SerializeField] Transform checkpointPhase3 = null;
 
+    PlayerController playerController = null;
+
+    private void Awake()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
     public Transform GetPhase2Checkpoint()
     {
         return phase2Checkpoint;

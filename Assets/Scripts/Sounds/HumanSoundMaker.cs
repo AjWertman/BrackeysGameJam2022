@@ -155,6 +155,7 @@ public class HumanSoundMaker : MonoBehaviour
         for (int i = 0; i < currentSounds.GetFootstepsClips().Length; i++)
         {
             footstepsAudioSources[i].clip = currentSounds.GetFootstepsClips()[i];
+            footstepsAudioSources[i].volume = newSounds.GetFootstepsVolume();
         }
     }
 
@@ -168,11 +169,17 @@ public class HumanSoundMaker : MonoBehaviour
 public class HumanSounds
 {
     [SerializeField] AudioClip[] footsteps = null;
+    [Range(0,1)][SerializeField] float footstepsVolume = 1f;
     [SerializeField] AudioClip landing = null;
 
     public AudioClip[] GetFootstepsClips()
     {
         return footsteps;
+    }
+
+    public float GetFootstepsVolume()
+    {
+        return footstepsVolume;
     }
 
     public AudioClip GetLanding()

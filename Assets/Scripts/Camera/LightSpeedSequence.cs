@@ -10,6 +10,8 @@ public class LightSpeedSequence : MonoBehaviour
     [SerializeField] GameObject lavaToShutoff = null;
     [SerializeField] float timeToLightSpeed = .4f;
 
+    [SerializeField] GameObject reticle = null;
+
     Camera mainCam = null;
     Volume volume = null;
 
@@ -56,12 +58,13 @@ public class LightSpeedSequence : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
 
-            //directionalLight.SetActive(false);
+            directionalLight.SetActive(false);
             playerController.SetPlayerPhase(PlayerPhase.Three);
             whaleManager.TurnOffWhalePhase();
 
             yield return new WaitForSeconds(1f);
             StartCoroutine(LightSpeed(false));
+            reticle.SetActive(true);
         }
     }
 

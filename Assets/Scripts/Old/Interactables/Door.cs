@@ -5,10 +5,8 @@ public class Door : RaycastableObject
 {
     [SerializeField] AudioClip doorSound = null;
 
-    [SerializeField] bool isTrap = false;
+    [SerializeField] bool isMoreThanASimpleDoor = false;
     [SerializeField] bool isLocked = true;
-
-    [SerializeField] bool isEndDoor = false;
 
     Animator animator = null;
     SoundFXManager soundFXManager = null;
@@ -51,9 +49,10 @@ public class Door : RaycastableObject
         if (isOpen) return;
         if (isLocked == true) return;
 
-        if (isTrap || isEndDoor)
+        if (isMoreThanASimpleDoor)
         {
-             onOpen();
+            activationText = "";
+            onOpen();
         }
         else
         {

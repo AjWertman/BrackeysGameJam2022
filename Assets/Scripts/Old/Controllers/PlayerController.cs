@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     RigidbodyFirstPersonController firstPersonController = null;
     Rigidbody rb = null;
+    CapsuleCollider capsuleCollider = null;
     BirdController birdController = null;
     UICanvas uiCanvas = null;
     Fader fader = null;
@@ -23,7 +25,6 @@ public class PlayerController : MonoBehaviour
     SoundFXManager soundFXManager = null;
     HumanSoundMaker humanSoundMaker = null;
     CheckpointManager checkpointManager = null;
-    MorningTasksSequence morningTasksSequence = null;
 
     Camera mainCam = null;
     Vector3 camStartPos = Vector3.zero;
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviour
     RaycastableObject currentRaycastableObject = null;
 
     bool isDead = false;
+
+    public event Action<PlayerPhase> onPhaseChange;
 
     private void Awake()
     {
@@ -44,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
         firstPersonController = GetComponent<RigidbodyFirstPersonController>();
         rb = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
 
         uiCanvas = FindObjectOfType<UICanvas>();
         soundFXManager = FindObjectOfType<SoundFXManager>();
@@ -51,7 +55,6 @@ public class PlayerController : MonoBehaviour
         musicPlayer = FindObjectOfType<MusicPlayer>();
 
         checkpointManager = FindObjectOfType<CheckpointManager>();
-        morningTasksSequence = FindObjectOfType<MorningTasksSequence>();
 
         uiCanvas.onControlsClose += () => SetPlayerPhase(PlayerPhase.One);
     }
@@ -73,16 +76,10 @@ public class PlayerController : MonoBehaviour
             ActivateCursor(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(0);
-        }
-
         if(currentPhase != PlayerPhase.Two)
         { 
             HandleRaycasts();
         }
-
     }
 
     private IEnumerator StartGame()
@@ -130,8 +127,6 @@ public class PlayerController : MonoBehaviour
             uiCanvas.DeactivateActivationText();
         }
     }
-
-
 
     public IEnumerator Die()
     {
@@ -195,6 +190,7 @@ public class PlayerController : MonoBehaviour
         rb.useGravity = shouldActivate;
         rb.isKinematic = !shouldActivate;
         humanSoundMaker.ActivateSoundMaker(shouldActivate);
+        capsuleCollider.enabled = shouldActivate;
 
         if (shouldActivate)
         {
@@ -207,42 +203,7 @@ public class PlayerController : MonoBehaviour
     {
         currentPhase = newPhase;
 
-        StartCoroutine(HandlePhaseChanges());
-    }
-
-    public IEnumerator HandlePhaseChanges()
-    {
-        if (currentPhase == PlayerPhase.One)
-        {
-            birdController.Deactivate();
-            ActivateFirstPersonController(true);
-            morningTasksSequence.BeginMorningTasksSequence();
-        }
-        else if (currentPhase == PlayerPhase.Two)
-        {
-            ActivateFirstPersonController(false);
-
-            currentCheckpoint = checkpointManager.GetPhase2Checkpoint();
-
-            birdController.Activate();
-        }
-        else if (currentPhase == PlayerPhase.Three)
-        {
-            birdController.Deactivate();
-
-            Transform phase3StartTransform = checkpointManager.GetPhase3StartTransform();
-            transform.position = phase3StartTransform.position;
-            transform.rotation = phase3StartTransform.rotation;
-
-            currentCheckpoint = checkpointManager.GetPhase3Checkpoint();
-
-            ActivateFirstPersonController(true);
-        }
-
-        musicPlayer.SetSong(currentPhase);
-
-        if (fader == null) yield break;
-        yield return fader.FadeIn(1);
+        onPhaseChange(newPhase);
     }
 
     public void UpdateCheckpoint(Transform _checkpoint)
@@ -250,60 +211,8 @@ public class PlayerController : MonoBehaviour
         currentCheckpoint = _checkpoint;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public PlayerPhase GetPlayerPhase()
     {
-        if(currentPhase == PlayerPhase.One)
-        {
-            BirdTransformation birdTransformation = other.GetComponent<BirdTransformation>();
-
-            if(birdTransformation != null)
-            {
-                rb.isKinematic = true;
-                StartCoroutine(birdTransformation.BeginBirdTransformation());
-            }
-        }
-        else if(currentPhase == PlayerPhase.Two)
-        {
-            LightSpeedSequence lightSpeedSequence = other.GetComponent<LightSpeedSequence>();
-
-            if (lightSpeedSequence != null)
-            {
-                StartCoroutine(lightSpeedSequence.ActivateLightSpeedSequence(this));
-                return;
-            }
-
-        }
-        else if (currentPhase == PlayerPhase.Three)
-        {
-            SchoolChaseSequence schoolChaseSequence = other.GetComponent<SchoolChaseSequence>();
-
-            if (schoolChaseSequence != null)
-            {
-                schoolChaseSequence.BeginChaseSequence();
-                return;
-            }
-        }
-
-        HumanSoundsTrigger humanSoundsTrigger = other.GetComponent<HumanSoundsTrigger>();
-
-        if(humanSoundsTrigger != null)
-        {
-            humanSoundMaker.SetNewSounds(humanSoundsTrigger.GetHumanSounds());
-        }
-
-        OutOfBounds oob = other.GetComponent<OutOfBounds>();
-
-        if (oob != null)
-        {
-            StartCoroutine(Die());
-            return;
-        }
-
-        EndDoor endDoor = other.GetComponent<EndDoor>();
-
-        if (endDoor != null)
-        {
-            StartCoroutine(endDoor.EndGame());
-        }
+        return currentPhase;
     }
 }

@@ -11,6 +11,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Button startButton = null;
     [SerializeField] Button quitButton = null;
 
+    [SerializeField] AudioClip startSound = null;
+    [SerializeField] AudioClip uiSound = null;
+
     Fader fader = null;
     SoundFXManager sfXManager = null;
 
@@ -23,6 +26,8 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         CreateCoreObjects();
+        startButton.onClick.AddListener(() => sfXManager.CreateSoundFX(startSound, sfXManager.transform, 1));
+        quitButton.onClick.AddListener(() => sfXManager.CreateSoundFX(uiSound, sfXManager.transform, 1));
     }
 
     private void CreateCoreObjects()
