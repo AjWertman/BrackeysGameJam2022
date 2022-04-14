@@ -7,7 +7,7 @@ public class BirdTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Whale hitWhale = other.GetComponentInParent<Whale>();
+        WhaleController hitWhale = other.GetComponentInParent<WhaleController>();
 
         if(hitWhale != null)
         {

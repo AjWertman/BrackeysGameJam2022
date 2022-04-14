@@ -39,7 +39,9 @@ public class BirdController : MonoBehaviour
         {
             mainCam.transform.position = Vector3.MoveTowards(mainCam.transform.position, birdCamTransform.position, 10 * Time.deltaTime);
 
-            mainCam.transform.eulerAngles = Vector3.MoveTowards(mainCam.transform.eulerAngles, birdCamTransform.eulerAngles, 100 * Time.deltaTime);
+            mainCam.transform.eulerAngles = Vector3.Slerp(mainCam.transform.eulerAngles, birdCamTransform.eulerAngles, 100 * Time.deltaTime);
+
+            //mainCam.transform.eulerAngles = Vector3.MoveTowards(mainCam.transform.eulerAngles, birdCamTransform.eulerAngles, 100 * Time.deltaTime);
 
             if (mainCam.transform.position == birdCamTransform.position && mainCam.transform.eulerAngles == birdCamTransform.eulerAngles)
             {
@@ -108,7 +110,7 @@ public class BirdController : MonoBehaviour
 
     private IEnumerator BeginTransitionSafety()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.75f);
 
         bool isTransitioned = mainCam.transform.position == birdCamTransform.position && mainCam.transform.eulerAngles == birdCamTransform.eulerAngles;
 

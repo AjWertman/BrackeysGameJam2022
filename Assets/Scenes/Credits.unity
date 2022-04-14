@@ -617,7 +617,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Programmer - Aj Wertman
+  m_text: Programmer & Level Designer - Aj Wertman
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c323aa894bdb6da4cbf9d2fdd5346a70, type: 2}
   m_sharedMaterial: {fileID: 8467472649047759345, guid: c323aa894bdb6da4cbf9d2fdd5346a70, type: 2}
@@ -972,7 +972,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3D Artist - Kara Nicole
+  m_text: 3D Artist & Level Designer - Kara Nicole
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c323aa894bdb6da4cbf9d2fdd5346a70, type: 2}
   m_sharedMaterial: {fileID: 8467472649047759345, guid: c323aa894bdb6da4cbf9d2fdd5346a70, type: 2}
