@@ -39,7 +39,6 @@ public class WhaleManager : MonoBehaviour
 
         if (canMakeSoundFX)
         {
-            canMakeSoundFX = false;
             StartCoroutine(HandleSFX());
         }
 
@@ -51,10 +50,9 @@ public class WhaleManager : MonoBehaviour
     private IEnumerator HandleSFX()
     {
         if (!canMakeSoundFX) yield break;
-
-        float randomTimeBetweenSfx = UnityEngine.Random.Range(2, 5);
+        canMakeSoundFX = false;
         sfxManager.CreateSoundFX(whaleSound0, null, 1);
-        yield return new WaitForSeconds(randomTimeBetweenSfx);
+        yield return new WaitForSeconds(5f);
         canMakeSoundFX = true;
     }
 

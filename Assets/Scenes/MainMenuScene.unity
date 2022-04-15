@@ -541,7 +541,7 @@ MonoBehaviour:
   startButton: {fileID: 8981524577467649641}
   quitButton: {fileID: 154562032}
   startSound: {fileID: 8300000, guid: f11db7591e91c29408ddc130ce4c3b54, type: 3}
-  uiSound: {fileID: 8300000, guid: c713d600a63b6ca4da27675ab44cc5eb, type: 3}
+  uiSound: {fileID: 8300000, guid: f11db7591e91c29408ddc130ce4c3b54, type: 3}
 --- !u!114 &1166676890
 MonoBehaviour:
   m_ObjectHideFlags: 0

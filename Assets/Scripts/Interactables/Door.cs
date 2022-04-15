@@ -58,7 +58,7 @@ public class Door : RaycastableObject
         {
             isOpen = true;
             animator.SetTrigger("open");
-            soundFXManager.CreateSoundFX(doorSound, transform, .1f);
+            soundFXManager.CreateSoundFX(doorSound, transform, .35f);
         }
     }
 

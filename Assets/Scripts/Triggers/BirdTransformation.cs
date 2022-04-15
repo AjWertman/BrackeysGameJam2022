@@ -6,7 +6,6 @@ public class BirdTransformation : MonoBehaviour
     [SerializeField] Door doorParent = null;
 
     [SerializeField] AudioClip fallClip = null;
-    [SerializeField] AudioClip bassClip = null;
     [SerializeField] float timeToTransformation = 5f;
     [SerializeField] GameObject oobToTurnOff = null;
     [SerializeField] GameObject floorToOpen = null;
@@ -42,8 +41,7 @@ public class BirdTransformation : MonoBehaviour
         oobToTurnOff.gameObject.SetActive(false);
         floorToOpen.gameObject.SetActive(false);
 
-        fXManager.CreateSoundFX(fallClip, transform, 1f);
-        fXManager.CreateSoundFX(bassClip, transform, .6f);
+        fXManager.CreateSoundFX(fallClip, transform, .5f);
     }
 
     public IEnumerator BeginBirdTransformation()

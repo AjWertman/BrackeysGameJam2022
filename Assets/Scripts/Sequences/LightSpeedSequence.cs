@@ -53,7 +53,7 @@ public class LightSpeedSequence : MonoBehaviour
             sequenceStarted = true;
 
             musicPlayer.Pause();
-            soundFXManager.CreateSoundFX(lightSpeedSoundFX, transform, .5f);
+            soundFXManager.CreateSoundFX(lightSpeedSoundFX, transform, .2f);
 
             yield return LightSpeed(true);
             lavaToShutoff.gameObject.SetActive(false);

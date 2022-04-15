@@ -83,18 +83,14 @@ public class BirdController : MonoBehaviour
     }
 
     public IEnumerator BirdDeath(Vector3 newPosition)
-    {
-        soundFXManager.CreateSoundFX(deathSound, transform, 1);
-
-        characterController.enabled = false;
-
+    {       
         transform.position = newPosition;
         Vector3 lookPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 1);
         transform.LookAt(lookPosition);
 
         yield return new WaitForSeconds(1f);
 
-        characterController.enabled = true;
+        Activate();
     }
 
     public void Activate()
@@ -128,5 +124,10 @@ public class BirdController : MonoBehaviour
         characterController.enabled = false;
         birdObject.SetActive(false);
         canFly = false;
+    }
+
+    public AudioClip GetDeathSound()
+    {
+        return deathSound;
     }
 }

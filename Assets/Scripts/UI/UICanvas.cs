@@ -7,16 +7,21 @@ public class UICanvas : MonoBehaviour
 {
     [SerializeField] GameObject controlsPage = null;
     [SerializeField] Button controlsButton = null;
+    [SerializeField] AudioClip uiSound = null;
 
     [SerializeField] TextMeshProUGUI activationText = null;
+
+    SoundFXManager soundFXManager = null;
 
     public event Action onControlsClose;
 
     private void Awake()
     {
         DeactivateActivationText();
+        soundFXManager = FindObjectOfType<SoundFXManager>();
 
         controlsButton.onClick.AddListener(() => DeactivateControls());
+        controlsButton.onClick.AddListener(() => soundFXManager.CreateSoundFX(uiSound, Camera.main.transform, 1));
     }
 
     public void ActivateActivationText(string activationString)

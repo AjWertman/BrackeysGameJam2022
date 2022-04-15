@@ -29,8 +29,9 @@ public class EndDoor : MonoBehaviour
     public IEnumerator EndGame()
     {
         if (isEnding) yield break;
-        slowMotionSequence.enabled = false;
         isEnding = true;
+
+        slowMotionSequence.enabled = false;
         Time.timeScale = 1;
 
         enemy.SetIsActivated(false);

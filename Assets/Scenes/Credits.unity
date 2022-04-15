@@ -2803,7 +2803,7 @@ MonoBehaviour:
   scrollSpeed: 15
   mainMenuButton: {fileID: 1513413496}
   quitButton: {fileID: 303443801}
-  uiSound: {fileID: 8300000, guid: c713d600a63b6ca4da27675ab44cc5eb, type: 3}
+  uiSound: {fileID: 8300000, guid: f11db7591e91c29408ddc130ce4c3b54, type: 3}
 --- !u!114 &1907413426
 MonoBehaviour:
   m_ObjectHideFlags: 0

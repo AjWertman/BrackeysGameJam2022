@@ -138,15 +138,23 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator DeathBehavior()
-    {       
+    {
+        bool isCurrentPhaseTwo = currentPhase == PlayerPhase.Two;
+        AudioClip deathClip = deathSound;
+        if (isCurrentPhaseTwo)
+        {
+            deathClip = birdController.GetDeathSound();
+            birdController.Deactivate();
+        }
+
+        soundFXManager.CreateSoundFX(deathClip, mainCam.transform, 1f);
         if (fader != null)
         {
             yield return fader.FadeOut(.5f, Color.black, null);
         }
 
-        if (currentPhase != PlayerPhase.Two)
-        {
-            soundFXManager.CreateSoundFX(deathSound, transform, 1);
+        if (!isCurrentPhaseTwo)
+        {         
             checkpointManager.ResetToLastCheckpoint(currentPhase);
 
             ActivateFirstPersonController(false);
@@ -159,14 +167,14 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(birdController.BirdDeath(currentCheckpoint.position));
+            yield return birdController.BirdDeath(currentCheckpoint.position);
         }
 
         isDead = false;
 
         if (fader != null)
         {
-            yield return fader.FadeIn(1);
+            yield return fader.FadeIn(.5f);
         }
     }
 
